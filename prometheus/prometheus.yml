@@ -12,3 +12,9 @@ scrape_configs:
     metrics_path: /actuator/prometheus
     static_configs:
       - targets: [ 'pix-eureka:8761' ]
+
+  - job_name: 'pix-gateway'
+    scrape_interval: 5s
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: [ 'pix-gateway:5000' ]
