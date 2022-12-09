@@ -1,0 +1,62 @@
+version: "3.3"
+
+services:
+  eureka:
+    container_name: pix-eureka
+    build:
+      context: ./eureka
+      dockerfile: Dockerfile
+    restart: always
+    networks:
+      - backend
+    ports:
+      - '8761:8761'
+
+  gateway:
+    container_name: pix-gateway
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    restart: always
+    networks:
+      - backend
+    ports:
+      - '5000:5000'
+    depends_on:
+      - eureka
+
+  prometheus:
+    container_name: pix-prometheus
+    image: prom/prometheus
+    restart: always
+    networks:
+      - backend
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    depends_on:
+      - eureka
+      - gateway
+
+  grafana:
+    container_name: pix-grafana
+    image: grafana/grafana
+    restart: always
+    networks:
+      - backend
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+    environment:
+      - GF_SERVER_PROTOCOL=http
+      - GF_SERVER_HTTP_PORT=3000
+      - GF_ADMIN_USER=grafana
+      - GF_ADMIN_PASSWORD=grafana
+    depends_on:
+      - prometheus
+
+networks:
+  backend:
