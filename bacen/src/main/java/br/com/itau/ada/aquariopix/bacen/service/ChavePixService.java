@@ -16,8 +16,19 @@ public class ChavePixService {
         this.chavePixRepository = chavePixRepository;
     }
 
-    public ChavePixDto buscarChave(String tipo, String chave){
-        Optional<ChavePix> chavePix = chavePixRepository.findById(tipo ,chave);
-        return chavePix.get().mapperToDto();
+    public void cadastrarChavePix (ChavePixDto chavePixDto) {
+        verificarChaveExistente(chavePixDto.getTipo(), chavePixDto.getChave());
+        chavePixRepository.save(chavePixDto.mapperToEntity());
     }
+
+    public ChavePixDto buscarChave(String tipo, String chave){
+       return chavePixRepository.findById(tipo ,chave).get().mapperToDto();
+    }
+
+    private void verificarChaveExistente(String tipo, String chave) {
+        if (buscarChave(tipo, chave).getChave().length() > 1){
+            throw new RuntimeException("A chave já está em uso");
+        }
+    }
+
 }
