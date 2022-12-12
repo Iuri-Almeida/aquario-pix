@@ -6,11 +6,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CadastroChave {
-
+/*
     @KafkaListener(
             id = "${spring.kafka.consumer.group-id}",
             topics = "${topic.name}")
     public void listenCadastroChave(String message, Acknowledgment ack){
 
     }
+ */
 }
