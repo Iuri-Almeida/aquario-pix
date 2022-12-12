@@ -1,6 +1,5 @@
 package com.letscode.itau.bancoitau.model;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +15,7 @@ public class Conta {
     private String nome;
     private String cpf;
     private String email;
-    private Long numeroConta;
-    private Long agencia;
+    private String numeroConta;
+    private String agencia;
 
 }
