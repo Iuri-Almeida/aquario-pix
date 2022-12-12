@@ -22,10 +22,10 @@ public class ChavePix {
     private String banco;
 
     @NotNull
-    private int agencia;
+    private String agencia;
 
     @NotNull
-    private int conta;
+    private String conta;
 
     public ChavePixDto mapperToDto() {
         return new ChavePixDto(this.chave, this.tipo, this.banco, this.agencia, this.conta);

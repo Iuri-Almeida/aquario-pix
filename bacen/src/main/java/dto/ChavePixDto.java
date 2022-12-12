@@ -15,9 +15,9 @@ public class ChavePixDto {
 
     private String banco;
 
-    private int agencia;
+    private String agencia;
 
-    private int conta;
+    private String conta;
 
 
     public ChavePix mapperToEntity() {
