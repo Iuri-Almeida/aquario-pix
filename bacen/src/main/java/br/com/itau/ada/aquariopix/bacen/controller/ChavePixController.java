@@ -1,7 +1,10 @@
 package br.com.itau.ada.aquariopix.bacen.controller;
 
 import br.com.itau.ada.aquariopix.bacen.service.ChavePixService;
-import dto.ChavePixDto;
+import br.com.itau.ada.aquariopix.bacen.dto.ChaveExistenteDto;
+import br.com.itau.ada.aquariopix.bacen.dto.ChavePixConfirmacaoDto;
+import br.com.itau.ada.aquariopix.bacen.dto.ChavePixSolicitacaoDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,11 +18,17 @@ public class ChavePixController {
         this.chavePixService = chavePixService;
     }
 
-    //TODO: Inserir tratamento de erro
     @GetMapping
-    public ResponseEntity<ChavePixDto> getChavePix(@RequestParam(value = "tipo", required = true) String tipo, @RequestParam("chave") String  chave) {
-        ChavePixDto chavePixDto = chavePixService.buscarChave(tipo, chave);
-        return ResponseEntity.ok(chavePixDto);
+    public ResponseEntity<ChaveExistenteDto> getChavePix(@RequestParam(value = "tipo", required = true) String tipo, @RequestParam("chave") String  chave) {
+        boolean chaveExistente = chavePixService.verificarChaveExistente(tipo, chave);
+        if (chaveExistente) return ResponseEntity.ok(new ChaveExistenteDto(chaveExistente));
+        else return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+    }
+
+    @PostMapping
+    public ResponseEntity<ChavePixConfirmacaoDto> cadastrarChavePix(@RequestBody ChavePixSolicitacaoDto chavePixSolicitacaoDto) {
+        ChavePixConfirmacaoDto chavePixConfirmacaoDto = chavePixService.cadastrarChavePix(chavePixSolicitacaoDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(chavePixConfirmacaoDto);
     }
 
 }
