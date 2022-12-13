@@ -8,11 +8,11 @@ import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CadastroChaveConsumer {
+public class CadastroChavePixConsumer {
 
     private final ChavePixService chavePixService;
 
-    public CadastroChaveConsumer(ChavePixService chavePixService) {
+    public CadastroChavePixConsumer(ChavePixService chavePixService) {
         this.chavePixService = chavePixService;
     }
 

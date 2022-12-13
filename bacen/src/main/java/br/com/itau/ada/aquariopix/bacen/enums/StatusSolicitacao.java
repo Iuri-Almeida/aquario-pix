@@ -1,6 +1,6 @@
 package br.com.itau.ada.aquariopix.bacen.enums;
 
-public enum StatusSolicitacoes {
+public enum StatusSolicitacao {
     Pendente,
     Aceito,
     Recusado

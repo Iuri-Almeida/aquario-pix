@@ -1,6 +1,6 @@
 package br.com.itau.ada.aquariopix.bacen.model;
 
-import br.com.itau.ada.aquariopix.bacen.enums.StatusSolicitacoes;
+import br.com.itau.ada.aquariopix.bacen.enums.StatusSolicitacao;
 import com.sun.istack.NotNull;
 import br.com.itau.ada.aquariopix.bacen.dto.ChavePixConfirmacaoDto;
 import lombok.*;
@@ -27,9 +27,5 @@ public class ChavePix {
 
     @NotNull
     private String conta;
-
-    public ChavePixConfirmacaoDto mapperToConfirmacaoDto(String reqId, StatusSolicitacoes status) {
-        return new ChavePixConfirmacaoDto(reqId, this.chave, this.tipo, this.banco, this.agencia, this.conta, status);
-    }
 
 }

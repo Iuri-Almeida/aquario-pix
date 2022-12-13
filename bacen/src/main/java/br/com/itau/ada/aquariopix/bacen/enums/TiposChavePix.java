@@ -1,6 +1,6 @@
 package br.com.itau.ada.aquariopix.bacen.enums;
 
-public enum TiposChave {
+public enum TiposChavePix {
     CPF,
     Email,
     Telefone,

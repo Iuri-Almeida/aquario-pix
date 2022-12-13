@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 @Service
-public class CadastroChaveProducer {
+public class CadastroChavePixProducer {
 
     @Value("${topic.producer.name}")
     private String topic;
@@ -15,7 +15,7 @@ public class CadastroChaveProducer {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
 
-    public CadastroChaveProducer(KafkaTemplate<String, String> kafkaTemplate) {
+    public CadastroChavePixProducer(KafkaTemplate<String, String> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 

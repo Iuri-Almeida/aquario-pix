@@ -1,6 +1,6 @@
 package br.com.itau.ada.aquariopix.bacen.dto;
 
-import br.com.itau.ada.aquariopix.bacen.enums.StatusSolicitacoes;
+import br.com.itau.ada.aquariopix.bacen.enums.StatusSolicitacao;
 import br.com.itau.ada.aquariopix.bacen.model.ChavePix;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,13 +21,9 @@ public class ChavePixConfirmacaoDto {
 
     private String conta;
 
-    private StatusSolicitacoes status;
+    private StatusSolicitacao status;
 
-    public ChavePix mapperToEntity() {
-        return new ChavePix(this.chave, this.tipo, this.banco, this.agencia, this.conta);
-    }
-
-    public void setStatus(StatusSolicitacoes status) {
+    public void setStatus(StatusSolicitacao status) {
         this.status = status;
     }
 }

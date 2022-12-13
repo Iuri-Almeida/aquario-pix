@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ChaveExistenteDto {
+public class ChavePixJaExistenteDto {
 
     private boolean chaveExistente;
 
