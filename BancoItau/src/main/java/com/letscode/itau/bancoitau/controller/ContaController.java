@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.net.URI;
 
@@ -22,12 +23,12 @@ public class ContaController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Conta> findById(@PathVariable Long id) {
+    public ResponseEntity<Mono<Conta>> findById(@PathVariable Long id) {
         return ResponseEntity.ok().body(contaService.findById(id));
     }
 
     @GetMapping(value = "/numeroContaAndAgencia")
-    public ResponseEntity<Conta> findByNumeroContaAndAgencia(
+    public ResponseEntity<Mono<Conta>> findByNumeroContaAndAgencia(
             @RequestParam(value = "numeroConta", defaultValue = "") String numeroConta,
             @RequestParam(value = "agencia", defaultValue = "") String agencia
     ) {

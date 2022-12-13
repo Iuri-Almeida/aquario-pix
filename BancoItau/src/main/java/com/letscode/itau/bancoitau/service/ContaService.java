@@ -5,6 +5,7 @@ import com.letscode.itau.bancoitau.repository.ContaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
@@ -18,12 +19,12 @@ public class ContaService {
         return contaRepository.findAll();
     }
 
-    public Conta findById(Long id) {
-        return contaRepository.findById(id).block();
+    public Mono<Conta> findById(Long id) {
+        return contaRepository.findById(id);
     }
 
-    public Conta findByNumeroContaAndAgencia(String numeroConta, String agencia) {
-        return contaRepository.findByNumeroContaAndAgencia(numeroConta, agencia).block();
+    public Mono<Conta> findByNumeroContaAndAgencia(String numeroConta, String agencia) {
+        return contaRepository.findByNumeroContaAndAgencia(numeroConta, agencia);
     }
 
     public void insert(Conta conta) {
@@ -31,11 +32,10 @@ public class ContaService {
     }
 
     public void update(Long id, Conta conta) {
-        Conta contaDb = this.findById(id);
-
-        this.updateData(contaDb, conta);
-
-        contaRepository.save(contaDb);
+        this.findById(id).subscribe(contaDb -> {
+            this.updateData(contaDb, conta);
+            contaRepository.save(contaDb);
+        });
     }
 
     public void delete(Long id) {
