@@ -22,6 +22,8 @@ public class CadastroChaveConsumer {
     public void listenCadastroChavePix(String message, Acknowledgment ack){
         ChavePixSolicitacaoDto chavePixDto = new Gson().fromJson(message, ChavePixSolicitacaoDto.class);
         chavePixService.cadastrarChavePix(chavePixDto);
+
+        ack.acknowledge();
     }
 
 }
