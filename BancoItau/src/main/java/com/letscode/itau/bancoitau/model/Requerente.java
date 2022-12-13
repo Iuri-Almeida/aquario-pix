@@ -6,7 +6,7 @@ import lombok.ToString;
 
 @Getter
 public class Requerente {
-    private Long conta;
-    private Long agencia;
-    private Long cpf;
+    private String conta;
+    private String agencia;
+    private String cpf;
 }
