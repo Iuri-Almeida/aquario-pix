@@ -2,13 +2,17 @@ spring:
   application:
     name: itau-service
   kafka:
+    bootstrap-servers: broker1:29092
     consumer:
-      bootstrap-servers: pix-kafka:9092
+#      group-id: "spring-kafka-service-consumer"
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       properties:
         spring.json.trusted.packages: "*"
     producer:
-      bootstrap-servers: pix-kafka:9092
-      client-id: "myId"
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+#      client-id: "spring-kafka-service-producer"
       properties:
         spring.json.trusted.packages: "*"
 #  datasource:
@@ -21,7 +25,7 @@ spring:
 #      ddl-auto: create-drop
 
 server:
-  port: 8080
+  port: 8081
 
 management:
   endpoints:
