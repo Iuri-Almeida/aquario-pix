@@ -21,7 +21,7 @@ public class ChavePixController {
         this.chavePixService = chavePixService;
     }
 
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<ChavePixJaExistenteDto> chavePixEmUso(@RequestParam(value = "tipo", required = true) String tipo, @RequestParam("chave") String  chave) {
         boolean chaveExistente = chavePixService.chaveEmUso(tipo, chave);
         if (chaveExistente) return ResponseEntity.ok(new ChavePixJaExistenteDto(chaveExistente));
@@ -34,7 +34,7 @@ public class ChavePixController {
         return ResponseEntity.status(HttpStatus.CREATED).body(chavePixConfirmacaoDto);
     }
 
-    @GetMapping
+    @GetMapping("/detalhes")
     public ResponseEntity<ChavePixDto> consultarChavePix(@RequestBody ChavePixSolicitacaoDto chavePixSolicitacaoDto) {
         Optional<ChavePixDto> chavePix = chavePixService.consultarChavePix(chavePixSolicitacaoDto);
         if (chavePix.isPresent()) return ResponseEntity.ok(chavePix.get());
