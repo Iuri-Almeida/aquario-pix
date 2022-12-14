@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: itau-service
+  kafka:
+    bootstrap-servers: broker1:29092
+    consumer:
+#      group-id: "spring-kafka-service-consumer"
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+#      client-id: "spring-kafka-service-producer"
+      properties:
+        spring.json.trusted.packages: "*"
+#  datasource:
+#    url: jdbc:postgresql://act-movies-db:5432/postgres
+#    username: postgres
+#    password: postgres
+#  jpa:
+#    generate-ddl: true
+#    hibernate:
+#      ddl-auto: create-drop
+
+server:
+  port: 8081
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://pix-eureka:8761/eureka/
+  instance:
+    hostname: pix-itau
