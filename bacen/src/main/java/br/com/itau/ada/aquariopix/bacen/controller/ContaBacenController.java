@@ -5,9 +5,9 @@ import br.com.itau.ada.aquariopix.bacen.service.ContaBacenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/bacen/conta")
@@ -16,7 +16,7 @@ public class ContaBacenController {
     private final ContaBacenService contaBacenService;
 
     @GetMapping
-    public ResponseEntity<Flux<ContaBacen>> findAll() {
+    public ResponseEntity<List<ContaBacen>> findAll() {
         return ResponseEntity.ok().body(contaBacenService.findAll());
     }
 

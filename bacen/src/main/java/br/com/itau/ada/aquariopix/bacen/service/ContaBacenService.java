@@ -4,24 +4,24 @@ import br.com.itau.ada.aquariopix.bacen.model.ContaBacen;
 import br.com.itau.ada.aquariopix.bacen.repository.ContaBacenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 
+import java.util.List;
 import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ContaBacenService {
     private final ContaBacenRepository contaBacenRepository;
 
-    public Flux<ContaBacen> findAll() {
+    public List<ContaBacen> findAll() {
         return contaBacenRepository.findAll();
     }
 
     public ContaBacen findById(Long id) {
-        return contaBacenRepository.findById(id).block();
+        return contaBacenRepository.findById(id).get();
     }
 
     public ContaBacen findByNumeroContaAndAgencia(String numeroConta, String agencia) {
-        return contaBacenRepository.findByNumeroContaAndAgencia(numeroConta, agencia).block();
+        return contaBacenRepository.findByNumeroContaAndAgencia(numeroConta, agencia).get();
     }
 
     public void insert(ContaBacen contaBacen) {
