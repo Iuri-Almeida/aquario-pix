@@ -3,7 +3,9 @@ package com.letscode.itau.bancoitau.service;
 import com.letscode.itau.bancoitau.model.Conta;
 import com.letscode.itau.bancoitau.repository.ContaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -19,27 +21,34 @@ public class ContaService {
         return contaRepository.findAll();
     }
 
-    public Mono<Conta> findById(Long id) {
-        return contaRepository.findById(id);
+    public Mono<ResponseEntity<Conta>> findById(Long id) {
+        return contaRepository.findById(id).map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    public Mono<Conta> findByNumeroContaAndAgencia(String numeroConta, String agencia) {
-        return contaRepository.findByNumeroContaAndAgencia(numeroConta, agencia);
+    public Mono<ResponseEntity<Conta>> findByNumeroContaAndAgencia(String numeroConta, String agencia) {
+        return contaRepository.findByNumeroContaAndAgencia(numeroConta, agencia)
+                .map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    public void insert(Conta conta) {
-        contaRepository.save(conta).subscribe(c -> System.out.println(c));
+    public Mono<ResponseEntity<Conta>> insert(Conta conta) {
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+        return contaRepository.save(conta)
+                .map(conta1 -> ResponseEntity.created(uriComponentsBuilder.path("/api/itau/conta/{id}")
+                        .buildAndExpand(conta1.getId()).toUri()).body(conta1));
     }
 
-    public void update(Long id, Conta conta) {
-        this.findById(id).subscribe(contaDb -> {
+    public Mono<ResponseEntity<Conta>> update(Long id, Conta conta) {
+        return contaRepository.findById(id).flatMap(contaDb -> {
             this.updateData(contaDb, conta);
-            contaRepository.save(contaDb);
-        });
+            return contaRepository.save(contaDb);
+        }).map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    public void delete(Long id) {
-        contaRepository.deleteById(id);
+    public Mono<ResponseEntity<Void>> delete(Long id) {
+        return contaRepository.findById(id)
+                .flatMap(contaDb -> contaRepository.delete(contaDb)
+                        .then(Mono.just(ResponseEntity.noContent().<Void>build())))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     private void updateData(Conta contaDb, Conta conta) {

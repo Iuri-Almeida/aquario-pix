@@ -23,34 +23,31 @@ public class ContaController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Mono<Conta>> findById(@PathVariable Long id) {
-        return ResponseEntity.ok().body(contaService.findById(id));
+    public Mono<ResponseEntity<Conta>> findById(@PathVariable Long id) {
+        return contaService.findById(id);
     }
 
     @GetMapping(value = "/numeroContaAndAgencia")
-    public ResponseEntity<Mono<Conta>> findByNumeroContaAndAgencia(
+    public Mono<ResponseEntity<Conta>> findByNumeroContaAndAgencia(
             @RequestParam(value = "numeroConta", defaultValue = "") String numeroConta,
             @RequestParam(value = "agencia", defaultValue = "") String agencia
     ) {
-        return ResponseEntity.ok().body(contaService.findByNumeroContaAndAgencia(numeroConta, agencia));
+        return contaService.findByNumeroContaAndAgencia(numeroConta, agencia);
     }
 
     @PostMapping
-    public ResponseEntity<Void> insert(@RequestBody Conta conta) {
-        contaService.insert(conta);
-        return ResponseEntity.created(URI.create("")).build();
+    public Mono<ResponseEntity<Conta>> insert(@RequestBody Conta conta) {
+        return contaService.insert(conta);
     }
 
     @PatchMapping(value = "/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody Conta conta) {
-        contaService.update(id, conta);
-        return ResponseEntity.noContent().build();
+    public Mono<ResponseEntity<Conta>> update(@PathVariable Long id, @RequestBody Conta conta) {
+        return contaService.update(id, conta);
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        contaService.delete(id);
-        return ResponseEntity.noContent().build();
+    public Mono<ResponseEntity<Void>> delete(@PathVariable Long id) {
+        return contaService.delete(id);
     }
 
 }
