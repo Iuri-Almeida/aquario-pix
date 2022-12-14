@@ -22,9 +22,6 @@ public class BancoItauApplication {
                 .build();
     }
 
-    @KafkaListener(id = "myId", topics = "cadastro-confirmacao-itau")
-    public void listen(String in) {
-        System.out.println(in);
-    }
+
 
 }
