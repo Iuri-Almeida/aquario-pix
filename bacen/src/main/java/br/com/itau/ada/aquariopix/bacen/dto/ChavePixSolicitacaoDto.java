@@ -25,6 +25,10 @@ public class ChavePixSolicitacaoDto {
         return new ChavePix(this.chave, this.tipo, this.banco, this.agencia, this.conta);
     }
 
+    public ChavePixDto mapperToChavePixDto() {
+        return new ChavePixDto(this.chave, this.tipo, this.banco, this.agencia, this.conta);
+    }
+
     public ChavePixConfirmacaoDto mapperToConfirmacaoDto(StatusSolicitacao status) {
         return new ChavePixConfirmacaoDto(this.reqId, this.chave, this.tipo, this.banco, this.agencia, this.conta, status);
     }
