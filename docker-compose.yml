@@ -52,6 +52,21 @@ services:
     networks:
       - backend
 
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
+    ports:
+      - "8080:8080"
+    restart: "no"
+    environment:
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=broker1:29092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+      - KAFKA_CLUSTERS_0_READONLY=false
+    depends_on:
+      - broker1
+    networks:
+      - backend
+
   gateway:
     container_name: pix-gateway
     build:
