@@ -12,6 +12,17 @@ services:
     ports:
       - '8761:8761'
 
+bacen:
+  container_name: pix-bacen
+    build:
+    context: ./Bacen
+    dockerfile: Dockerfile
+  restart: always
+  networks:
+    - backend
+  depends_on:
+    - eureka
+
   gateway:
     container_name: pix-gateway
     build:
