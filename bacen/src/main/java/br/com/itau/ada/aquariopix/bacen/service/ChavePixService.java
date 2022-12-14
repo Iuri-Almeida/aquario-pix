@@ -4,7 +4,6 @@ import br.com.itau.ada.aquariopix.bacen.dto.ChavePixDto;
 import br.com.itau.ada.aquariopix.bacen.enums.StatusSolicitacao;
 import br.com.itau.ada.aquariopix.bacen.kafka.producer.CadastroChavePixProducer;
 import br.com.itau.ada.aquariopix.bacen.model.ChavePix;
-import br.com.itau.ada.aquariopix.bacen.model.ContaBacen;
 import br.com.itau.ada.aquariopix.bacen.repository.ChavePixRepository;
 import com.google.gson.Gson;
 import br.com.itau.ada.aquariopix.bacen.dto.ChavePixConfirmacaoDto;
@@ -20,12 +19,12 @@ public class ChavePixService {
 
     private final CadastroChavePixProducer cadastroChaveProducer;
 
-    private final ContaBacenService contaBacenService;
+    //private final ContaBacenService contaBacenService;
 
-    public ChavePixService(ChavePixRepository chavePixRepository, CadastroChavePixProducer cadastroChaveProducer, ContaBacenService contaBacenService) {
+    public ChavePixService(ChavePixRepository chavePixRepository, CadastroChavePixProducer cadastroChaveProducer/*, ContaBacenService contaBacenService*/) {
         this.chavePixRepository = chavePixRepository;
         this.cadastroChaveProducer = cadastroChaveProducer;
-        this.contaBacenService = contaBacenService;
+        //this.contaBacenService = contaBacenService;
     }
 
     public boolean chaveEmUso(String tipo, String chave) {
@@ -85,8 +84,9 @@ public class ChavePixService {
     }
 
     private boolean verificarCpfDaConta(String cpf, String conta, String agencia){
-        ContaBacen contaBacen = contaBacenService.findByNumeroContaAndAgencia(conta, agencia);
-        return contaBacen.getCpf().equals(cpf);
+        //ContaBacen contaBacen = contaBacenService.findByNumeroContaAndAgencia(conta, agencia);
+        //return contaBacen.getCpf().equals(cpf);
+        return true;
     }
 
     private void publicarConfirmacaoChave(ChavePixConfirmacaoDto chavePixConfirmacaoDto) {
