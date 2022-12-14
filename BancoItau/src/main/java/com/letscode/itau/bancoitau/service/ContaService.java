@@ -28,7 +28,7 @@ public class ContaService {
     }
 
     public void insert(Conta conta) {
-        contaRepository.save(conta);
+        contaRepository.save(conta).subscribe(c -> System.out.println(c));
     }
 
     public void update(Long id, Conta conta) {
