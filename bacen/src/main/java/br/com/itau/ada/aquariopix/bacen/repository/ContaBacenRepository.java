@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface ContaBacenRepository extends JpaRepository<ContaBacen, Long> {
 
-    @Query(value = "SELECT * FROM CHAVE_PIX c WHERE c.TIPO = ?1 AND c.CHAVE = ?2", nativeQuery = true)
+    @Query(value = "SELECT * FROM CONTA_BACEN c WHERE c.NUMERO_CONTA = ?1 AND c.AGENCIA = ?2", nativeQuery = true)
     Optional<ContaBacen> findByNumeroContaAndAgencia(String numeroConta, String agencia);
 
 }

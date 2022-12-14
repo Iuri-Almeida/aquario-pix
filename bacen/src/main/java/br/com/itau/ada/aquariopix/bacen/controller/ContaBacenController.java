@@ -10,7 +10,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/bacen/conta")
+@RequestMapping(value = "/api/bacen/contas")
 @RequiredArgsConstructor
 public class ContaBacenController {
     private final ContaBacenService contaBacenService;

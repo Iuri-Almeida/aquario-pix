@@ -35,9 +35,13 @@ public class ChavePixService {
             chavePixConfirmacaoDto.setStatus(StatusSolicitacao.Aceito);
         }
 
-        publicarConfirmacaoChave(chavePixConfirmacaoDto);
-
         return chavePixConfirmacaoDto;
+    }
+
+    public void cadastrarChavePixEnviaMensagem(ChavePixSolicitacaoDto chavePixDto) {
+        ChavePixConfirmacaoDto chavePixConfirmacaoDto = cadastrarChavePix(chavePixDto);
+
+        publicarConfirmacaoChave(chavePixConfirmacaoDto);
     }
 
     private void publicarConfirmacaoChave(ChavePixConfirmacaoDto chavePixConfirmacaoDto) {
