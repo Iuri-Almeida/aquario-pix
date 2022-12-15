@@ -1,7 +1,6 @@
-package com.letscode.itau.bancoitau.model;
+package com.letscode.itau.bancoada.model;
 
 import lombok.Getter;
-import lombok.ToString;
 //import org.hibernate.validator.constraints.br.CPF;
 
 @Getter

@@ -1,4 +1,4 @@
-package com.letscode.itau.bancoitau.enumeration;
+package com.letscode.itau.bancoada.enumeration;
 
 public enum Status {
     Pendente, Recusado, Aceito

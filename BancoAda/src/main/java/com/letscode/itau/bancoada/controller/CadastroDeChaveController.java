@@ -1,8 +1,8 @@
-package com.letscode.itau.bancoitau.controller;
+package com.letscode.itau.bancoada.controller;
 
-import com.letscode.itau.bancoitau.dto.ChavePixDTO;
-import com.letscode.itau.bancoitau.model.ChavePix;
-import com.letscode.itau.bancoitau.service.CadastroDeChaveService;
+import com.letscode.itau.bancoada.dto.ChavePixDTO;
+import com.letscode.itau.bancoada.model.ChavePix;
+import com.letscode.itau.bancoada.service.CadastroDeChaveService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +11,7 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/itau/pix")
+@RequestMapping("/api/ada/pix")
 public class CadastroDeChaveController {
     private final CadastroDeChaveService service;
 

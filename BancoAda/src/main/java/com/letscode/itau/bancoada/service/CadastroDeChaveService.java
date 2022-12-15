@@ -1,14 +1,14 @@
-package com.letscode.itau.bancoitau.service;
+package com.letscode.itau.bancoada.service;
 
 import com.google.gson.Gson;
-import com.letscode.itau.bancoitau.dto.CadastroBacenDTORequest;
-import com.letscode.itau.bancoitau.dto.CadastroBacenDTOResponse;
-import com.letscode.itau.bancoitau.dto.ChavePixDTO;
-import com.letscode.itau.bancoitau.enumeration.Status;
-import com.letscode.itau.bancoitau.enumeration.TipoChavePix;
-import com.letscode.itau.bancoitau.model.ChavePix;
-import com.letscode.itau.bancoitau.repository.ChavePixRepository;
-import com.letscode.itau.bancoitau.repository.ContaRepository;
+import com.letscode.itau.bancoada.dto.CadastroBacenDTORequest;
+import com.letscode.itau.bancoada.dto.CadastroBacenDTOResponse;
+import com.letscode.itau.bancoada.dto.ChavePixDTO;
+import com.letscode.itau.bancoada.enumeration.Status;
+import com.letscode.itau.bancoada.enumeration.TipoChavePix;
+import com.letscode.itau.bancoada.model.ChavePix;
+import com.letscode.itau.bancoada.repository.ChavePixRepository;
+import com.letscode.itau.bancoada.repository.ContaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +54,7 @@ public class CadastroDeChaveService {
     public Mono<ResponseEntity<ChavePix>> salvarChavePix(ChavePixDTO chavePixDTO) {
         ChavePix chavePix = chavePixDTOparaChavePix(chavePixDTO);
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-        return pixRepository.save(chavePix).map(chave -> ResponseEntity.created(uriComponentsBuilder.path("/api/itau/pix/{chave}").buildAndExpand(chave.getChave()).toUri()).body(chave));
+        return pixRepository.save(chavePix).map(chave -> ResponseEntity.created(uriComponentsBuilder.path("/api/ada/pix/{chave}").buildAndExpand(chave.getChave()).toUri()).body(chave));
     }
 
     public Long geraIdRequisicao() {
@@ -76,7 +76,7 @@ public class CadastroDeChaveService {
         return pixRepository.findAll();
     }
 
-    @KafkaListener(id = "myId", topics = "confirmacao-cadastro-chavepix-itau")
+    @KafkaListener(id = "myId", topics = "confirmacao-cadastro-chavepix-ada")
     public void getStatusBacen(String mensagem) {
         CadastroBacenDTOResponse cadastroBacenDTOResponse = new Gson().fromJson(mensagem, CadastroBacenDTOResponse.class);
         atualizaStatus(cadastroBacenDTOResponse);
@@ -115,7 +115,7 @@ public class CadastroDeChaveService {
 
 
     private void enviaMensagemKafka(String mensagem) {
-        kafkaTemplate.send("itau-cadastro-chavepix-solicitacao", mensagem);
+        kafkaTemplate.send("ada-cadastro-chavepix-solicitacao", mensagem);
     }
 
 

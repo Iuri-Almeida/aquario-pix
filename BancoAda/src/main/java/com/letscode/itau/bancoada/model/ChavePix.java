@@ -1,7 +1,7 @@
-package com.letscode.itau.bancoitau.model;
+package com.letscode.itau.bancoada.model;
 
-import com.letscode.itau.bancoitau.enumeration.Status;
-import com.letscode.itau.bancoitau.enumeration.TipoChavePix;
+import com.letscode.itau.bancoada.enumeration.Status;
+import com.letscode.itau.bancoada.enumeration.TipoChavePix;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

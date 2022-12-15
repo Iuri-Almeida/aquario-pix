@@ -1,4 +1,4 @@
-package com.letscode.itau.bancoitau;
+package com.letscode.itau.bancoada;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.boot.SpringApplication;
@@ -9,15 +9,15 @@ import org.springframework.kafka.config.TopicBuilder;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-public class BancoItauApplication {
+public class BancoAdaApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(BancoItauApplication.class, args);
+        SpringApplication.run(BancoAdaApplication.class, args);
     }
 
     @Bean
     public NewTopic topic() {
-        return TopicBuilder.name("itau-cadastro-chavepix-solicitacao")
+        return TopicBuilder.name("ada-cadastro-chavepix-solicitacao")
                 .partitions(10)
                 .replicas(1)
                 .build();

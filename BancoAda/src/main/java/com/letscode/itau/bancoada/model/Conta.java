@@ -1,4 +1,4 @@
-package com.letscode.itau.bancoitau.model;
+package com.letscode.itau.bancoada.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

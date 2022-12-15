@@ -1,6 +1,6 @@
 spring:
   application:
-    name: itau-service
+    name: ada-service
   kafka:
     bootstrap-servers: broker1:29092
     consumer:
@@ -40,4 +40,4 @@ eureka:
     service-url:
       defaultZone: http://pix-eureka:8761/eureka/
   instance:
-    hostname: pix-itau
+    hostname: pix-ada

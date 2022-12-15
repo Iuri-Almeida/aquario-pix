@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.letscode.itau</groupId>
-    <artifactId>bancoItau</artifactId>
+    <artifactId>bancoAda</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>bancoItau</name>
+    <name>bancoAda</name>
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>11</java.version>

@@ -1,17 +1,15 @@
-package com.letscode.itau.bancoitau.controller;
+package com.letscode.itau.bancoada.controller;
 
-import com.letscode.itau.bancoitau.model.Conta;
-import com.letscode.itau.bancoitau.service.ContaService;
+import com.letscode.itau.bancoada.model.Conta;
+import com.letscode.itau.bancoada.service.ContaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.net.URI;
-
 @RestController
-@RequestMapping(value = "/api/itau/conta")
+@RequestMapping(value = "/api/ada/conta")
 @RequiredArgsConstructor
 public class ContaController {
 

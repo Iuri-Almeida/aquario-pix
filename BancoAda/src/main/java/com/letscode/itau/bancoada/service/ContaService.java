@@ -1,7 +1,7 @@
-package com.letscode.itau.bancoitau.service;
+package com.letscode.itau.bancoada.service;
 
-import com.letscode.itau.bancoitau.model.Conta;
-import com.letscode.itau.bancoitau.repository.ContaRepository;
+import com.letscode.itau.bancoada.model.Conta;
+import com.letscode.itau.bancoada.repository.ContaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class ContaService {
     public Mono<ResponseEntity<Conta>> insert(Conta conta) {
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
         return contaRepository.save(conta)
-                .map(conta1 -> ResponseEntity.created(uriComponentsBuilder.path("/api/itau/conta/{id}")
+                .map(conta1 -> ResponseEntity.created(uriComponentsBuilder.path("/api/ada/conta/{id}")
                         .buildAndExpand(conta1.getId()).toUri()).body(conta1));
     }
 

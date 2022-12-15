@@ -1,4 +1,4 @@
-package com.letscode.itau.bancoitau.config;
+package com.letscode.itau.bancoada.config;
 
 import io.r2dbc.h2.H2ConnectionConfiguration;
 import io.r2dbc.h2.H2ConnectionFactory;

@@ -1,6 +1,6 @@
-package com.letscode.itau.bancoitau.repository;
+package com.letscode.itau.bancoada.repository;
 
-import com.letscode.itau.bancoitau.model.Conta;
+import com.letscode.itau.bancoada.model.Conta;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import reactor.core.publisher.Mono;
 
