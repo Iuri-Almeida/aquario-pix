@@ -25,7 +25,7 @@ public class ChavePix {
     private String numeroConta;
     private String chave;
     @Column("status")
-    private Status status = Status.PENDENTE;
+    private Status status = Status.Pendente;
 
     public ChavePix(Long reqId, TipoChavePix tipoDeChave, String agencia, String numeroConta, String chave, Status status) {
         this.reqId = reqId;

@@ -24,6 +24,18 @@ services:
       - eureka
       - broker1
 
+  bacen:
+    container_name: pix-bacen
+    build:
+      context: ./bacen
+      dockerfile: Dockerfile
+    restart: always
+    networks:
+      - backend
+    depends_on:
+      - eureka
+      - broker1
+
   zookeeper:
     image: zookeeper:3.7.0
     ports:
