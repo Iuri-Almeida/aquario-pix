@@ -96,18 +96,18 @@ public class CadastroDeChaveService {
     }
 
     private void atualizaStatus(CadastroBacenDTOResponse cadastroBacenDTOResponse) {
-        if (Status.ACEITO.equals(cadastroBacenDTOResponse.getStatus())) {
+        if (Status.Aceito.equals(cadastroBacenDTOResponse.getStatus())) {
             pixRepository.findByChave(cadastroBacenDTOResponse.getChave()).subscribe(entidade -> {
-                entidade.setStatus(Status.ACEITO);
+                entidade.setStatus(Status.Aceito);
                 pixRepository.save(entidade).subscribe(e -> {
-                    System.out.println("Status atualizado com sucesso " + Status.ACEITO);
+                    System.out.println("Status atualizado com sucesso " + Status.Aceito);
                 });
             });
-        } else if (Status.RECUSADO.equals(cadastroBacenDTOResponse.getStatus())) {
+        } else if (Status.Recusado.equals(cadastroBacenDTOResponse.getStatus())) {
             pixRepository.findByChave(cadastroBacenDTOResponse.getChave()).subscribe(entidade -> {
-                entidade.setStatus(Status.RECUSADO);
+                entidade.setStatus(Status.Recusado);
                 pixRepository.save(entidade).subscribe(e -> {
-                    System.out.println("Status atualizado com sucesso " + Status.RECUSADO);
+                    System.out.println("Status atualizado com sucesso " + Status.Recusado);
                 });
             });
         }
@@ -120,6 +120,6 @@ public class CadastroDeChaveService {
 
 
     private ChavePix chavePixDTOparaChavePix(ChavePixDTO chavePixDTO) {
-        return new ChavePix(chavePixDTO.getReqId(), chavePixDTO.getTipoDeChave(), chavePixDTO.getRequerente().getAgencia(), chavePixDTO.getRequerente().getConta(), chavePixDTO.getRequerente().getCpf(), Status.PENDENTE);
+        return new ChavePix(chavePixDTO.getReqId(), chavePixDTO.getTipoDeChave(), chavePixDTO.getRequerente().getAgencia(), chavePixDTO.getRequerente().getConta(), chavePixDTO.getRequerente().getCpf(), Status.Pendente);
     }
 }
