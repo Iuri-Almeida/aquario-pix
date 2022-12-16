@@ -15,5 +15,6 @@ create table CONTA(
     cpf varchar primary key not null ,
     email varchar unique ,
     numeroConta varchar,
-    agencia varchar
+    agencia varchar,
+    saldo numeric not null
 );
