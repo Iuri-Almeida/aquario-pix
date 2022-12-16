@@ -14,7 +14,7 @@ public class ConfigDB extends AbstractR2dbcConfiguration {
     public ConnectionFactory connectionFactory() {
         return new H2ConnectionFactory(
                 H2ConnectionConfiguration.builder()
-                        .url("mem:testdb;DB_CLOSE_DELAY=-1;")
+                        .url("mem:testdb2;DB_CLOSE_DELAY=-1;")
                         .username("sa")
                         .build()
         );
