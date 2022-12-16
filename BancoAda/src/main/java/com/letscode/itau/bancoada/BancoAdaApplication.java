@@ -15,12 +15,4 @@ public class BancoAdaApplication {
         SpringApplication.run(BancoAdaApplication.class, args);
     }
 
-    @Bean
-    public NewTopic topic() {
-        return TopicBuilder.name("ada-cadastro-chavepix-solicitacao")
-                .partitions(10)
-                .replicas(1)
-                .build();
-    }
-
 }
