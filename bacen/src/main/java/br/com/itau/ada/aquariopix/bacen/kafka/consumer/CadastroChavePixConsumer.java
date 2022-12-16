@@ -19,11 +19,28 @@ public class CadastroChavePixConsumer {
     @KafkaListener(
             id = "${spring.kafka.consumer.cadastro-chavePix-Itau.group-id}",
             topics = "${topic.cadastro-chavePix-Itau.consumer.name}")
-    public void listenCadastroChavePix(String message, Acknowledgment ack){
-        ChavePixSolicitacaoDto chavePixDto = new Gson().fromJson(message, ChavePixSolicitacaoDto.class);
-        chavePixService.cadastrarChavePixEnviaMensagem(chavePixDto);
+    public void listenCadastroChavePixItau(String mensagem, Acknowledgment ack){
+        cadastrarChavePix(mensagem);
 
         ack.acknowledge();
+    }
+
+    @KafkaListener(
+            id = "${spring.kafka.consumer.cadastro-chavePix-ada.group-id}",
+            topics = "${topic.cadastro-chavePix-ada.consumer.name}")
+    public void listenCadastroChavePixAda(String mensagem, Acknowledgment ack){
+        cadastrarChavePix(mensagem);
+
+        ack.acknowledge();
+    }
+
+    private void cadastrarChavePix(String mensagem) {
+        ChavePixSolicitacaoDto chavePixDto = parseMensagem(mensagem);
+        chavePixService.cadastrarChavePixEnviaMensagem(chavePixDto);
+    }
+
+    private ChavePixSolicitacaoDto parseMensagem(String mensagem) {
+        return new Gson().fromJson(mensagem, ChavePixSolicitacaoDto.class);
     }
 
 }

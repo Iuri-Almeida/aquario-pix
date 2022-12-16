@@ -84,12 +84,24 @@ public class ChavePixService {
         String message = new Gson().toJson(chavePixConfirmacaoDto);
         String key = chavePixConfirmacaoDto.getReqId() + chavePixConfirmacaoDto.getBanco();
 
-        cadastroChaveProducer.publish("confirmacao-cadastro-chavepix-itau", key, message);
+        String topic = definirTopico(chavePixConfirmacaoDto.getBanco());
+        cadastroChaveProducer.publish(topic, key, message);
     }
 
     public Optional<ChavePixDto> consultarChavePix (String chave){
         Optional<ChavePix> resultado = chavePixRepository.findById(chave);
         return Optional.ofNullable(resultado.get().mapperToChavePixDto());
     }
+
+    private String definirTopico(String banco) {
+        switch (banco) {
+            case ("Itau"):
+                return "confirmacao-cadastro-chavepix-itau";
+            case ("Ada"):
+                return "confirmacao-cadastro-chavepix-ada";
+        }
+        throw new RuntimeException("Banco não cadastrado");
+    }
+
 
 }
