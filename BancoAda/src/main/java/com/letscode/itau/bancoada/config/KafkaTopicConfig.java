@@ -9,8 +9,16 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaTopicConfig {
 
     @Bean
-    public NewTopic topic() {
+    public NewTopic topicoAdaCadastroChavePixSolicitacao() {
         return TopicBuilder.name("ada-cadastro-chavepix-solicitacao")
+                .partitions(10)
+                .replicas(1)
+                .build();
+    }
+
+    @Bean
+    public NewTopic topicoAdaPixSolicitacao() {
+        return TopicBuilder.name("ada-pix-solicitacao")
                 .partitions(10)
                 .replicas(1)
                 .build();
