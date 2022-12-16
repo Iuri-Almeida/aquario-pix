@@ -13,7 +13,5 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class PixDTOResponse {
     private Status status;
-    private String contaRemetente;
-    private String agenciaRemetente;
-    private BigDecimal valor;
+    private String reqId;
 }
