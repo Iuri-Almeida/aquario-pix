@@ -5,6 +5,7 @@ import br.com.itau.ada.aquariopix.bacen.dto.transferenciaPix.PixSolicitacaoDto;
 import br.com.itau.ada.aquariopix.bacen.enums.StatusSolicitacao;
 import br.com.itau.ada.aquariopix.bacen.kafka.producer.BacenProducer;
 import br.com.itau.ada.aquariopix.bacen.repository.PixTransferenciaRepository;
+import com.google.gson.Gson;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -36,9 +37,9 @@ public class PixSolicitacaoService {
         String topic;
         switch (banco) {
             case ("Itau"):
-                producer.publish("pix-solicitacao-itau", pixSolicitacaoDto.getReqId()+banco, pixSolicitacaoDto.toString());
+                producer.publish("pix-solicitacao-itau", pixSolicitacaoDto.getReqId(), new Gson().toJson(pixSolicitacaoDto));
             case ("Ada"):
-                producer.publish("pix-solicitacao-ada", pixSolicitacaoDto.getReqId()+banco, pixSolicitacaoDto.toString());
+                producer.publish("pix-solicitacao-ada", pixSolicitacaoDto.getReqId(), new Gson().toJson(pixSolicitacaoDto));
         }
     }
 }

@@ -15,13 +15,13 @@ public class PixSolicitacaoDto {
     private String reqId;
     private String chave;
     private BigDecimal valor;
-    private LocalDateTime dataHora;
+    private String dataHora;
     private String bancoRemetente;
     private String contaRemetente;
     private String agenciaRemetente;
 
     public PixTransferencia mapperToEntity(StatusSolicitacao status){
-        return new PixTransferencia(this.reqId, this.chave, this.valor, this.dataHora, this.bancoRemetente, this.contaRemetente, this. agenciaRemetente, status);
+        return new PixTransferencia(this.reqId, this.chave, this.valor, LocalDateTime.parse(this.dataHora), this.bancoRemetente, this.contaRemetente, this. agenciaRemetente, status);
     }
 
 }

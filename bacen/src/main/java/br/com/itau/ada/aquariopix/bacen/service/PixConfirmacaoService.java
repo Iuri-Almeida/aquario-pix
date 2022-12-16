@@ -5,6 +5,7 @@ import br.com.itau.ada.aquariopix.bacen.dto.transferenciaPix.PixConfirmacaoDto;
 import br.com.itau.ada.aquariopix.bacen.kafka.producer.BacenProducer;
 import br.com.itau.ada.aquariopix.bacen.model.PixTransferencia;
 import br.com.itau.ada.aquariopix.bacen.repository.PixTransferenciaRepository;
+import com.google.gson.Gson;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -29,6 +30,7 @@ public class PixConfirmacaoService {
     }
     private void atualizarStatusPix(PixConfirmacaoDto pixConfirmacaoDto, PixTransferencia entity) {
         entity.setStatus(pixConfirmacaoDto.getStatus());
+        pixTransferenciaRepository.save(entity);
     }
 
     public void enviarConfirmacao(PixConfirmacaoDto pixConfirmacaoDto) {
@@ -40,9 +42,9 @@ public class PixConfirmacaoService {
 
         switch (banco) {
             case ("Itau"):
-                producer.publish("pix-confirmacao-itau", pixConfirmacaoDto.getReqId(), pixConfirmacaoDto.toString());
+                producer.publish("pix-confirmacao-itau", pixConfirmacaoDto.getReqId(), new Gson().toJson(pixConfirmacaoDto));
             case ("Ada"):
-                producer.publish("pix-confirmacao-ada", pixConfirmacaoDto.getReqId(), pixConfirmacaoDto.toString());
+                producer.publish("pix-confirmacao-ada", pixConfirmacaoDto.getReqId(), new Gson().toJson(pixConfirmacaoDto));
         }
     }
 
