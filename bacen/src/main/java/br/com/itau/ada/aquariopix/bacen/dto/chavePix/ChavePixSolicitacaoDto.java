@@ -1,5 +1,6 @@
-package br.com.itau.ada.aquariopix.bacen.dto;
+package br.com.itau.ada.aquariopix.bacen.dto.chavePix;
 
+import br.com.itau.ada.aquariopix.bacen.dto.ChavePixDto;
 import br.com.itau.ada.aquariopix.bacen.enums.StatusSolicitacao;
 import br.com.itau.ada.aquariopix.bacen.model.ChavePix;
 import lombok.AllArgsConstructor;

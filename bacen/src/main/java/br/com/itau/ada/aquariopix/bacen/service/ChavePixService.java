@@ -1,14 +1,14 @@
 package br.com.itau.ada.aquariopix.bacen.service;
 
 import br.com.itau.ada.aquariopix.bacen.dto.ChavePixDto;
+import br.com.itau.ada.aquariopix.bacen.dto.chavePix.ChavePixConfirmacaoDto;
+import br.com.itau.ada.aquariopix.bacen.dto.chavePix.ChavePixSolicitacaoDto;
 import br.com.itau.ada.aquariopix.bacen.enums.StatusSolicitacao;
-import br.com.itau.ada.aquariopix.bacen.kafka.producer.CadastroChavePixProducer;
+import br.com.itau.ada.aquariopix.bacen.kafka.producer.BacenProducer;
 import br.com.itau.ada.aquariopix.bacen.model.ChavePix;
 import br.com.itau.ada.aquariopix.bacen.model.ContaBacen;
 import br.com.itau.ada.aquariopix.bacen.repository.ChavePixRepository;
 import com.google.gson.Gson;
-import br.com.itau.ada.aquariopix.bacen.dto.ChavePixConfirmacaoDto;
-import br.com.itau.ada.aquariopix.bacen.dto.ChavePixSolicitacaoDto;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,11 +18,11 @@ public class ChavePixService {
 
     private final ChavePixRepository chavePixRepository;
 
-    private final CadastroChavePixProducer cadastroChaveProducer;
+    private final BacenProducer cadastroChaveProducer;
 
     private final ContaBacenService contaBacenService;
 
-    public ChavePixService(ChavePixRepository chavePixRepository, CadastroChavePixProducer cadastroChaveProducer, ContaBacenService contaBacenService) {
+    public ChavePixService(ChavePixRepository chavePixRepository, BacenProducer cadastroChaveProducer, ContaBacenService contaBacenService) {
         this.chavePixRepository = chavePixRepository;
         this.cadastroChaveProducer = cadastroChaveProducer;
         this.contaBacenService = contaBacenService;
@@ -84,20 +84,12 @@ public class ChavePixService {
         String message = new Gson().toJson(chavePixConfirmacaoDto);
         String key = chavePixConfirmacaoDto.getReqId() + chavePixConfirmacaoDto.getBanco();
 
-        cadastroChaveProducer.publish(key, message);
+        cadastroChaveProducer.publish("confirmacao-cadastro-chavepix-itau", key, message);
     }
 
-    public Optional<ChavePixDto> consultarChavePix (ChavePixSolicitacaoDto chavePix){
-        Optional<ChavePix> resultado = chavePixRepository.findById(chavePix.getChave());
-
-        if (resultado.isPresent()) {
-            if (resultado.get().getBanco() != chavePix.getBanco())
-            {
-                throw new RuntimeException("Acesso negado. Essa chave não pertence ao cliente informado");
-            }
-        }
-
-        return Optional.ofNullable(chavePix.mapperToChavePixDto());
+    public Optional<ChavePixDto> consultarChavePix (String chave){
+        Optional<ChavePix> resultado = chavePixRepository.findById(chave);
+        return Optional.ofNullable(resultado.get().mapperToChavePixDto());
     }
 
 }

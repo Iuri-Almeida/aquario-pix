@@ -1,8 +1,8 @@
 package br.com.itau.ada.aquariopix.bacen.kafka.consumer;
 
+import br.com.itau.ada.aquariopix.bacen.dto.chavePix.ChavePixSolicitacaoDto;
 import br.com.itau.ada.aquariopix.bacen.service.ChavePixService;
 import com.google.gson.Gson;
-import br.com.itau.ada.aquariopix.bacen.dto.ChavePixSolicitacaoDto;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Service;
@@ -17,8 +17,8 @@ public class CadastroChavePixConsumer {
     }
 
     @KafkaListener(
-            id = "${spring.kafka.consumer.group-id}",
-            topics = "${topic.consumer.name}")
+            id = "${spring.kafka.consumer.cadastro-chavePix-Itau.group-id}",
+            topics = "${topic.cadastro-chavePix-Itau.consumer.name}")
     public void listenCadastroChavePix(String message, Acknowledgment ack){
         ChavePixSolicitacaoDto chavePixDto = new Gson().fromJson(message, ChavePixSolicitacaoDto.class);
         chavePixService.cadastrarChavePixEnviaMensagem(chavePixDto);

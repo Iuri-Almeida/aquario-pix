@@ -1,10 +1,10 @@
 package br.com.itau.ada.aquariopix.bacen.controller;
 
 import br.com.itau.ada.aquariopix.bacen.dto.ChavePixDto;
+import br.com.itau.ada.aquariopix.bacen.dto.chavePix.ChavePixConfirmacaoDto;
+import br.com.itau.ada.aquariopix.bacen.dto.chavePix.ChavePixJaExistenteDto;
+import br.com.itau.ada.aquariopix.bacen.dto.chavePix.ChavePixSolicitacaoDto;
 import br.com.itau.ada.aquariopix.bacen.service.ChavePixService;
-import br.com.itau.ada.aquariopix.bacen.dto.ChavePixJaExistenteDto;
-import br.com.itau.ada.aquariopix.bacen.dto.ChavePixConfirmacaoDto;
-import br.com.itau.ada.aquariopix.bacen.dto.ChavePixSolicitacaoDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,9 +34,9 @@ public class ChavePixController {
         return ResponseEntity.status(HttpStatus.CREATED).body(chavePixConfirmacaoDto);
     }
 
-    @GetMapping("/detalhes")
-    public ResponseEntity<ChavePixDto> consultarChavePix(@RequestBody ChavePixSolicitacaoDto chavePixSolicitacaoDto) {
-        Optional<ChavePixDto> chavePix = chavePixService.consultarChavePix(chavePixSolicitacaoDto);
+    @GetMapping("/{chave}")
+    public ResponseEntity<ChavePixDto> consultarChavePix(@RequestParam String chave) {
+        Optional<ChavePixDto> chavePix = chavePixService.consultarChavePix(chave);
         if (chavePix.isPresent()) return ResponseEntity.ok(chavePix.get());
         else return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
