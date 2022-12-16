@@ -1,17 +1,22 @@
-package br.com.itau.ada.aquariopix.bacen.dto.transferenciaPix;
+package br.com.itau.ada.aquariopix.bacen.model;
 
 import br.com.itau.ada.aquariopix.bacen.enums.StatusSolicitacao;
-import br.com.itau.ada.aquariopix.bacen.model.PixTransferencia;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Getter
-public class PixSolicitacaoDto {
+@Entity
+@NoArgsConstructor
+public class PixTransferencia {
 
+    @Id
     private String reqId;
     private String chave;
     private BigDecimal valor;
@@ -19,9 +24,10 @@ public class PixSolicitacaoDto {
     private String bancoRemetente;
     private String contaRemetente;
     private String agenciaRemetente;
+    private StatusSolicitacao status;
 
-    public PixTransferencia mapperToEntity(StatusSolicitacao status){
-        return new PixTransferencia(this.reqId, this.chave, this.valor, this.dataHora, this.bancoRemetente, this.contaRemetente, this. agenciaRemetente, status);
+    public void setStatus(StatusSolicitacao status) {
+        this.status = status;
     }
 
 }
