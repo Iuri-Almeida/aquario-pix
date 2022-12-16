@@ -30,3 +30,9 @@ scrape_configs:
     metrics_path: /actuator/prometheus
     static_configs:
       - targets: [ 'pix-bacen:8082' ]
+
+  - job_name: 'pix-ada'
+    scrape_interval: 5s
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: [ 'pix-ada:8083' ]
