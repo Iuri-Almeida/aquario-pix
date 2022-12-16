@@ -17,8 +17,8 @@ public class CadastroChavePixConsumer {
     }
 
     @KafkaListener(
-            id = "${spring.kafka.consumer.cadastro-chavePix-Itau.group-id}",
-            topics = "${topic.cadastro-chavePix-Itau.consumer.name}")
+            id = "${spring.kafka.consumer.cadastro-chavePix-itau.group-id}",
+            topics = "${topic.cadastro-chavePix-itau.consumer.name}")
     public void listenCadastroChavePixItau(String mensagem, Acknowledgment ack){
         cadastrarChavePix(mensagem);
 
@@ -26,8 +26,8 @@ public class CadastroChavePixConsumer {
     }
 
     @KafkaListener(
-            id = "${spring.kafka.consumer.cadastro-chavePix-ada.group-id}",
-            topics = "${topic.cadastro-chavePix-ada.consumer.name}")
+            id = "ada-cadastro-chavepix",
+            topics = "ada-cadastro-chavepix-solicitacao")
     public void listenCadastroChavePixAda(String mensagem, Acknowledgment ack){
         cadastrarChavePix(mensagem);
 
