@@ -7,9 +7,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class ChavePixConfirmacaoDto {
-
-    private String reqId;
+public class ChavePixDto {
 
     private String chave;
 
@@ -21,9 +19,5 @@ public class ChavePixConfirmacaoDto {
 
     private String conta;
 
-    private StatusSolicitacao status;
 
-    public void setStatus(StatusSolicitacao status) {
-        this.status = status;
-    }
 }
