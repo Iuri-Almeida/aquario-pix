@@ -12,16 +12,72 @@ services:
     ports:
       - '8761:8761'
 
-bacen:
-  container_name: pix-bacen
+  itau:
+    container_name: pix-itau
     build:
-    context: ./Bacen
-    dockerfile: Dockerfile
-  restart: always
-  networks:
-    - backend
-  depends_on:
-    - eureka
+      context: ./BancoItau
+      dockerfile: Dockerfile
+    restart: always
+    networks:
+      - backend
+    depends_on:
+      - eureka
+      - broker1
+
+  bacen:
+    container_name: pix-bacen
+    build:
+      context: ./bacen
+      dockerfile: Dockerfile
+    restart: always
+    networks:
+      - backend
+    depends_on:
+      - eureka
+      - broker1
+
+  zookeeper:
+    image: zookeeper:3.7.0
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    networks:
+      - backend
+
+  broker1:
+    image: confluentinc/cp-kafka:6.1.1
+    container_name: broker1
+    ports:
+      - "9092:9092"
+    expose:
+      - "29092"
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker1:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_MIN_INSYNC_REPLICAS: 1
+    depends_on:
+      - zookeeper
+    networks:
+      - backend
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
+    ports:
+      - "8080:8080"
+    restart: "no"
+    environment:
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=broker1:29092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+      - KAFKA_CLUSTERS_0_READONLY=false
+    depends_on:
+      - broker1
+    networks:
+      - backend
 
   gateway:
     container_name: pix-gateway

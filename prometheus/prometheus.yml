@@ -18,3 +18,15 @@ scrape_configs:
     metrics_path: /actuator/prometheus
     static_configs:
       - targets: [ 'pix-gateway:5000' ]
+
+  - job_name: 'pix-itau'
+    scrape_interval: 5s
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: [ 'pix-itau:8081' ]
+
+  - job_name: 'pix-bacen'
+    scrape_interval: 5s
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: [ 'pix-bacen:8082' ]
