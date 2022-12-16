@@ -46,7 +46,7 @@ public class PixService {
         );
     }
 
-    @KafkaListener(id = "myId2", topics = "pix-solicitacao-itau")
+    @KafkaListener(id = "myId2", topics = "pix-confirmacao-itau")
     public void getStatusBacenPix(String mensagem) {
         PixDTOResponse pixDTOResponse = new Gson().fromJson(mensagem, PixDTOResponse.class);
         if (Status.Recusado.equals(pixDTOResponse.getStatus())) {
