@@ -1,4 +1,4 @@
-package br.com.itau.ada.aquariopix.bacen.dto;
+package br.com.itau.ada.aquariopix.bacen.dto.chavePix;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

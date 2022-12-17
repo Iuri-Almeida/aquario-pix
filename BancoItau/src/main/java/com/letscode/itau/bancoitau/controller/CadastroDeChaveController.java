@@ -1,8 +1,11 @@
 package com.letscode.itau.bancoitau.controller;
 
 import com.letscode.itau.bancoitau.dto.ChavePixDTO;
+import com.letscode.itau.bancoitau.dto.PixDTORequest;
 import com.letscode.itau.bancoitau.model.ChavePix;
+import com.letscode.itau.bancoitau.model.Conta;
 import com.letscode.itau.bancoitau.service.CadastroDeChaveService;
+import com.letscode.itau.bancoitau.service.PixService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +15,13 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/itau/pix")
-public class CadastroDeChaveController {
+public class CadastroDeChaveController { //TODO renomear classes
     private final CadastroDeChaveService service;
+    private final PixService pixService;
 
     @PostMapping("chaves")
     public Mono<ResponseEntity<ChavePix>> cadastrarChavePix(@RequestBody ChavePixDTO chavePixDTO) {
+        //TODO tratamento de erro chave repetida
 
         Long idRequisicao = service.withIdChavePix(chavePixDTO);
 
@@ -39,5 +44,11 @@ public class CadastroDeChaveController {
     @GetMapping()
     public Flux<ChavePix> findAll() {
         return service.findAll();
+    }
+
+    @PostMapping()
+    public Mono<ResponseEntity<Conta>> enviaPix(@RequestBody PixDTORequest pixDTO) {
+        System.out.println(pixDTO);
+        return pixService.enviaPix(pixDTO);
     }
 }

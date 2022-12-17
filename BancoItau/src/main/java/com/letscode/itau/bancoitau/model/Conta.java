@@ -7,6 +7,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,5 +23,5 @@ public class Conta {
     @Column("numeroConta")
     private String numeroConta;
     private String agencia;
-
+    private BigDecimal saldo;
 }

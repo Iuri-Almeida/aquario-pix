@@ -1,12 +1,14 @@
 package br.com.itau.ada.aquariopix.bacen.model;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -22,9 +24,9 @@ public class ContaBacen {
     @NotNull
     private String email;
     @NotNull
-    private Long numeroConta;
+    private String numeroConta;
     @NotNull
-    private Long agencia;
+    private String agencia;
     @NotNull
     private String banco;
 
