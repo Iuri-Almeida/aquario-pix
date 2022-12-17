@@ -69,9 +69,10 @@ public class PixService {
     @KafkaListener(groupId = "myId4", topics = "pix-solicitacao-ada")
     public void getSolicitacaoPix(String msg) {
         PixSolicitacaoDTORequest pixSolicitacaoDTORequest = new Gson().fromJson(msg, PixSolicitacaoDTORequest.class);
-        contaRepository.findByNumeroContaAndAgencia(pixSolicitacaoDTORequest.getContaRemetente(), pixSolicitacaoDTORequest.getAgenciaRemetente())
+        contaRepository.findByCpf(pixSolicitacaoDTORequest.getChave())
                 // TODO Se a conta não existir?
                 .subscribe(conta -> {
+                    // TODO corrigir ao adicionar o saldo
                     conta.setSaldo(conta.getSaldo().add(pixSolicitacaoDTORequest.getValor()));
                     contaRepository.save(conta);
 
