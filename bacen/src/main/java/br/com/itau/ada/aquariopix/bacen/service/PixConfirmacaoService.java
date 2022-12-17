@@ -1,6 +1,5 @@
 package br.com.itau.ada.aquariopix.bacen.service;
 
-import br.com.itau.ada.aquariopix.bacen.dto.ChavePixDto;
 import br.com.itau.ada.aquariopix.bacen.dto.transferenciaPix.PixConfirmacaoDto;
 import br.com.itau.ada.aquariopix.bacen.kafka.producer.BacenProducer;
 import br.com.itau.ada.aquariopix.bacen.model.PixTransferencia;
@@ -37,8 +36,7 @@ public class PixConfirmacaoService {
         Optional<PixTransferencia> pixTransferencia = buscarPixTransferencia(pixConfirmacaoDto);
         atualizarStatusPix(pixConfirmacaoDto, pixTransferencia.get());
 
-        ChavePixDto chavePix = chavePixService.consultarChavePix(pixTransferencia.get().getChave());
-        String banco = chavePix.getBanco();
+        String banco = pixTransferencia.get().getBancoRemetente();
 
         switch (banco) {
             case ("Itau"):
