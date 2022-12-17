@@ -57,10 +57,11 @@ public class PixService {
             });
         } else if (Status.Aceito.equals(pixDTOResponse.getStatus())) {
             System.out.println("Pix aceito!");
-            transferenciaRepository.findById(pixDTOResponse.getReqId()).subscribe(
+            transferenciaRepository.findByReqId(pixDTOResponse.getReqId()).subscribe(
                     transferencia -> {
                         transferencia.setStatus(Status.Aceito);
-                        transferenciaRepository.save(transferencia).subscribe();
+                        // TODO corrigir o erro ao adicionar o .subscribe() (sem ele não é atualizado no banco)
+                        transferenciaRepository.save(transferencia);
                     }
             );
         }
