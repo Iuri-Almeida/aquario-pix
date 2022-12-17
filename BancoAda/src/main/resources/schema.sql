@@ -18,3 +18,13 @@ create table CONTA(
     agencia varchar,
     saldo numeric not null
 );
+
+create table transferencias (
+    reqId varchar primary key not null,
+    chave varchar not null,
+    valor numeric not null,
+    dataHora timestamp,
+    contaRemetente varchar not null,
+    agenciaRemetente varchar not null,
+    status varchar
+);
