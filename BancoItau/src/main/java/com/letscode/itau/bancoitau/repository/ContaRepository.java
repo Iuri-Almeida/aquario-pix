@@ -8,4 +8,6 @@ public interface ContaRepository extends R2dbcRepository<Conta, Long> {
 
     Mono<Conta> findByNumeroContaAndAgencia(String numeroConta, String agencia);
 
+    Mono<Conta> findByCpf(String cpf);
+
 }
