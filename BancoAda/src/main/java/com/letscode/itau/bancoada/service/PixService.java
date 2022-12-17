@@ -47,11 +47,11 @@ public class PixService {
             System.out.println("Rollback de pix");
             transferenciaRepository.findById(pixDTOResponse.getReqId()).subscribe(transferencia -> {
                 transferencia.setStatus(Status.Recusado);
-                transferenciaRepository.save(transferencia);
+                transferenciaRepository.save(transferencia).subscribe();
                 contaRepository.findByNumeroContaAndAgencia(transferencia.getContaRemetente(), transferencia.getAgenciaRemetente())
                         .subscribe(conta -> {
                             conta.setSaldo(conta.getSaldo().add(transferencia.getValor()));
-                            contaRepository.save(conta);
+                            contaRepository.save(conta).subscribe();
                         }
                 );
             });
@@ -60,7 +60,7 @@ public class PixService {
             transferenciaRepository.findById(pixDTOResponse.getReqId()).subscribe(
                     transferencia -> {
                         transferencia.setStatus(Status.Aceito);
-                        transferenciaRepository.save(transferencia);
+                        transferenciaRepository.save(transferencia).subscribe();
                     }
             );
         }
@@ -72,12 +72,11 @@ public class PixService {
         contaRepository.findByCpf(pixSolicitacaoDTORequest.getChave())
                 // TODO Se a conta não existir?
                 .subscribe(conta -> {
-                    // TODO corrigir ao adicionar o saldo
                     conta.setSaldo(conta.getSaldo().add(pixSolicitacaoDTORequest.getValor()));
-                    contaRepository.save(conta);
+                    contaRepository.save(conta).subscribe();
 
                     PixTransferencia pixTransferencia = pixSolicitacaoDTORequest.mapperToEntity(Status.Aceito);
-                    transferenciaRepository.save(pixTransferencia);
+                    transferenciaRepository.save(pixTransferencia).subscribe();
 
                     kafkaTemplate.send("ada-pix-confirmacao", new Gson().toJson(new PixDTOResponse(pixTransferencia.getReqId(), pixTransferencia.getStatus())));
 
