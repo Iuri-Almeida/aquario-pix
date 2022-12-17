@@ -1,9 +1,12 @@
 package com.letscode.itau.bancoitau.service;
 
+import com.google.gson.Gson;
 import com.letscode.itau.bancoitau.model.Conta;
+import com.letscode.itau.bancoitau.model.ContaBacen;
 import com.letscode.itau.bancoitau.repository.ContaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
@@ -16,6 +19,7 @@ import java.util.Optional;
 public class ContaService {
 
     private final ContaRepository contaRepository;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     public Flux<Conta> findAll() {
         return contaRepository.findAll();
@@ -33,8 +37,11 @@ public class ContaService {
     public Mono<ResponseEntity<Conta>> insert(Conta conta) {
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
         return contaRepository.save(conta)
-                .map(conta1 -> ResponseEntity.created(uriComponentsBuilder.path("/api/itau/conta/{id}")
-                        .buildAndExpand(conta1.getId()).toUri()).body(conta1));
+                .map(conta1 -> {
+                    this.enviaConta(new ContaBacen(conta1.getNome(), conta1.getCpf(), conta1.getEmail(), conta1.getNumeroConta(), conta1.getAgencia(), "Itau"));
+                    return ResponseEntity.created(uriComponentsBuilder.path("/api/itau/conta/{id}")
+                            .buildAndExpand(conta1.getId()).toUri()).body(conta1);
+                });
     }
 
     public Mono<ResponseEntity<Conta>> update(Long id, Conta conta) {
@@ -73,6 +80,11 @@ public class ContaService {
             contaDb.setAgencia(conta.getAgencia());
         }
 
+    }
+
+    private void enviaConta(ContaBacen contaBacen) {
+        String mensagem = new Gson().toJson(contaBacen);
+        kafkaTemplate.send("itau-cadastro-conta", mensagem);
     }
 
 }
