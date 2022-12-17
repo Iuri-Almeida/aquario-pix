@@ -37,14 +37,16 @@ public class PixConfirmacaoService {
         Optional<PixTransferencia> pixTransferencia = buscarPixTransferencia(pixConfirmacaoDto);
         atualizarStatusPix(pixConfirmacaoDto, pixTransferencia.get());
 
-        Optional<ChavePixDto> chavePix = chavePixService.consultarChavePix(pixTransferencia.get().getChave());
-        String banco = chavePix.get().getBanco();
+        ChavePixDto chavePix = chavePixService.consultarChavePix(pixTransferencia.get().getChave());
+        String banco = chavePix.getBanco();
 
         switch (banco) {
             case ("Itau"):
                 producer.publish("pix-confirmacao-itau", pixConfirmacaoDto.getReqId(), new Gson().toJson(pixConfirmacaoDto));
+                break;
             case ("Ada"):
                 producer.publish("pix-confirmacao-ada", pixConfirmacaoDto.getReqId(), new Gson().toJson(pixConfirmacaoDto));
+                break;
         }
     }
 
