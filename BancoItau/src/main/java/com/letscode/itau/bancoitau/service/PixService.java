@@ -54,6 +54,8 @@ public class PixService {
             String reqId = pixDTOResponse.getReqId();
             transferenciaRepository.findById(reqId).subscribe(transferencia -> {
                 transferencia.setStatus(Status.Recusado);
+                transferenciaRepository.save(transferencia).subscribe();
+
                 String agencia = transferencia.getAgenciaRemetente();
                 String numeroConta = transferencia.getContaRemetente();
                 BigDecimal valor = transferencia.getValor();
@@ -63,7 +65,7 @@ public class PixService {
                             BigDecimal saldo = conta.getSaldo();
                             BigDecimal novoSaldo = saldo.add(valor);
                             conta.setSaldo(novoSaldo);
-                            contaRepository.save(conta);
+                            contaRepository.save(conta).subscribe();
                         }
                 );
             });
@@ -73,6 +75,7 @@ public class PixService {
                     transferencia -> {
                         System.out.println("CHEGUEI 3");
                         transferencia.setStatus(Status.Aceito);
+                        transferenciaRepository.save(transferencia).subscribe();
                     }
             );
         }
