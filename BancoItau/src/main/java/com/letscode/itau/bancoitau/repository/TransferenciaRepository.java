@@ -7,4 +7,6 @@ import reactor.core.publisher.Mono;
 
 public interface TransferenciaRepository extends R2dbcRepository<PixTransferencia, String> {
 
+    Mono<PixTransferencia> findByReqId(String reqId);
+
 }
