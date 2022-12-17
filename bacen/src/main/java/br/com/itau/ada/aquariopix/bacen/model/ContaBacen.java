@@ -24,9 +24,9 @@ public class ContaBacen {
     @NotNull
     private String email;
     @NotNull
-    private Long numeroConta;
+    private String numeroConta;
     @NotNull
-    private Long agencia;
+    private String agencia;
     @NotNull
     private String banco;
 
