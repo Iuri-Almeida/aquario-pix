@@ -9,8 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping("api/bacen/pix/chaves")
 public class ChavePixController {
@@ -35,10 +33,8 @@ public class ChavePixController {
     }
 
     @GetMapping("/{chave}")
-    public ResponseEntity<ChavePixDto> consultarChavePix(@RequestParam String chave) {
-        Optional<ChavePixDto> chavePix = chavePixService.consultarChavePix(chave);
-        if (chavePix.isPresent()) return ResponseEntity.ok(chavePix.get());
-        else return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+    public ResponseEntity<ChavePixDto> consultarChavePix(@PathVariable String chave) {
+        return ResponseEntity.ok(chavePixService.consultarChavePix(chave));
     }
 
 }
