@@ -14,7 +14,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 import java.math.BigDecimal;
 
@@ -35,7 +34,7 @@ public class PixService {
                 conta -> {
                     if (conta.getSaldo().compareTo(pixDTO.getValor()) >= 0) {
                         kafkaTemplate.send("itau-pix-solicitacao", mensagem);
-                        PixTransferencia pixTransferencia = new PixTransferencia(pixDTO.getReqId(), pixDTO.getChave(), pixDTO.getValor(), pixDTO.getData(), pixDTO.getContaRemetente(), pixDTO.getAgenciaRemetente());
+                        PixTransferencia pixTransferencia = new PixTransferencia(pixDTO.getReqId(), pixDTO.getChave(), pixDTO.getValor(), pixDTO.getData(), pixDTO.getBancoRemetente(), pixDTO.getContaRemetente(), pixDTO.getAgenciaRemetente());
                         transferenciaRepository.save(pixTransferencia).subscribe(System.out::println);
                         BigDecimal novoSaldo = conta.getSaldo().subtract(pixDTO.getValor());
                         conta.setSaldo(novoSaldo);
@@ -49,6 +48,7 @@ public class PixService {
     @KafkaListener(id = "myId2", topics = "pix-confirmacao-itau")
     public void getStatusBacenPix(String mensagem) {
         PixDTOResponse pixDTOResponse = new Gson().fromJson(mensagem, PixDTOResponse.class);
+        System.out.println("CHEGUEI 1");
         if (Status.Recusado.equals(pixDTOResponse.getStatus())) {
             System.out.println("Rollback de pix");
             String reqId = pixDTOResponse.getReqId();
@@ -68,8 +68,10 @@ public class PixService {
                 );
             });
         } else if (Status.Aceito.equals(pixDTOResponse.getStatus())) {
+            System.out.println("CHEGUEI 2");
             transferenciaRepository.findById(pixDTOResponse.getReqId()).subscribe(
                     transferencia -> {
+                        System.out.println("CHEGUEI 3");
                         transferencia.setStatus(Status.Aceito);
                     }
             );

@@ -22,17 +22,20 @@ public class PixTransferencia {
     private BigDecimal valor;
     @Column("dataHora")
     private LocalDateTime dataHora;
+    @Column("bancoRemetente")
+    private String bancoRemetente;
     @Column("contaRemetente")
     private String contaRemetente;
     @Column("agenciaRemetente")
     private String agenciaRemetente;
     private Status status = Status.Pendente;
 
-    public PixTransferencia(String reqId, String chave, BigDecimal valor, LocalDateTime dataHora, String contaRemetente, String agenciaRemetente) {
+    public PixTransferencia(String reqId, String chave, BigDecimal valor, LocalDateTime dataHora, String bancoRemetente, String contaRemetente, String agenciaRemetente) {
         this.reqId = reqId;
         this.chave = chave;
         this.valor = valor;
         this.dataHora = dataHora;
+        this.bancoRemetente = bancoRemetente;
         this.contaRemetente = contaRemetente;
         this.agenciaRemetente = agenciaRemetente;
     }
