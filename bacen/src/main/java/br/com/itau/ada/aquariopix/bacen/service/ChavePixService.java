@@ -5,13 +5,10 @@ import br.com.itau.ada.aquariopix.bacen.dto.chavePix.ChavePixConfirmacaoDto;
 import br.com.itau.ada.aquariopix.bacen.dto.chavePix.ChavePixSolicitacaoDto;
 import br.com.itau.ada.aquariopix.bacen.enums.StatusSolicitacao;
 import br.com.itau.ada.aquariopix.bacen.kafka.producer.BacenProducer;
-import br.com.itau.ada.aquariopix.bacen.model.ChavePix;
 import br.com.itau.ada.aquariopix.bacen.model.ContaBacen;
 import br.com.itau.ada.aquariopix.bacen.repository.ChavePixRepository;
 import com.google.gson.Gson;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class ChavePixService {
@@ -88,9 +85,8 @@ public class ChavePixService {
         cadastroChaveProducer.publish(topic, key, message);
     }
 
-    public Optional<ChavePixDto> consultarChavePix (String chave){
-        Optional<ChavePix> resultado = chavePixRepository.findById(chave);
-        return Optional.ofNullable(resultado.get().mapperToChavePixDto());
+    public ChavePixDto consultarChavePix (String chave){
+        return chavePixRepository.findById(chave).orElseThrow(() -> new RuntimeException("Chave não encontrada")).mapperToChavePixDto();
     }
 
     private String definirTopico(String banco) {
