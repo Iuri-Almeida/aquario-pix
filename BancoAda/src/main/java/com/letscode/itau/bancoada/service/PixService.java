@@ -30,7 +30,7 @@ public class PixService {
                 .flatMap(conta -> {
                     if (conta.getSaldo().compareTo(pixDTORequest.getValor()) >= 0) {
                         kafkaTemplate.send("ada-pix-solicitacao", msg);
-                        PixTransferencia pixTransferencia = new PixTransferencia(pixDTORequest.getReqId(), pixDTORequest.getChave(), pixDTORequest.getValor(), pixDTORequest.getData(), pixDTORequest.getContaRemetente(), pixDTORequest.getAgenciaRemetente());
+                        PixTransferencia pixTransferencia = new PixTransferencia(pixDTORequest.getReqId(), pixDTORequest.getChave(), pixDTORequest.getValor(), pixDTORequest.getData(), "Ada", pixDTORequest.getContaRemetente(), pixDTORequest.getAgenciaRemetente());
                         transferenciaRepository.save(pixTransferencia).subscribe(System.out::println);
                         conta.setSaldo(conta.getSaldo().subtract(pixDTORequest.getValor()));
                         return contaRepository.save(conta).map(ResponseEntity::ok);

@@ -24,6 +24,7 @@ create table transferencias (
     chave varchar not null,
     valor numeric not null,
     dataHora timestamp,
+    bancoRemetente varchar not null,
     contaRemetente varchar not null,
     agenciaRemetente varchar not null,
     status varchar
