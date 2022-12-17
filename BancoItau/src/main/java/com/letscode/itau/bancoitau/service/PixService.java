@@ -3,6 +3,7 @@ package com.letscode.itau.bancoitau.service;
 import com.google.gson.Gson;
 import com.letscode.itau.bancoitau.dto.PixDTORequest;
 import com.letscode.itau.bancoitau.dto.PixDTOResponse;
+import com.letscode.itau.bancoitau.dto.PixSolicitacaoDTORequest;
 import com.letscode.itau.bancoitau.enumeration.Status;
 import com.letscode.itau.bancoitau.model.Conta;
 import com.letscode.itau.bancoitau.model.PixTransferencia;
@@ -48,7 +49,6 @@ public class PixService {
     @KafkaListener(id = "myId2", topics = "pix-confirmacao-itau")
     public void getStatusBacenPix(String mensagem) {
         PixDTOResponse pixDTOResponse = new Gson().fromJson(mensagem, PixDTOResponse.class);
-        System.out.println("CHEGUEI 1");
         if (Status.Recusado.equals(pixDTOResponse.getStatus())) {
             System.out.println("Rollback de pix");
             String reqId = pixDTOResponse.getReqId();
@@ -70,15 +70,32 @@ public class PixService {
                 );
             });
         } else if (Status.Aceito.equals(pixDTOResponse.getStatus())) {
-            System.out.println("CHEGUEI 2");
-            transferenciaRepository.findById(pixDTOResponse.getReqId()).subscribe(
+            transferenciaRepository.findByReqId(pixDTOResponse.getReqId()).subscribe(
                     transferencia -> {
-                        System.out.println("CHEGUEI 3");
                         transferencia.setStatus(Status.Aceito);
-                        transferenciaRepository.save(transferencia).subscribe();
+                        // TODO corrigir o erro ao adicionar o .subscribe() (sem ele não é atualizado no banco)
+                        transferenciaRepository.save(transferencia);
                     }
             );
         }
+    }
+
+    @KafkaListener(groupId = "myId5", topics = "pix-solicitacao-itau")
+    public void getSolicitacaoPix(String msg) {
+        PixSolicitacaoDTORequest pixSolicitacaoDTORequest = new Gson().fromJson(msg, PixSolicitacaoDTORequest.class);
+        contaRepository.findByCpf(pixSolicitacaoDTORequest.getChave())
+                // TODO Se a conta não existir?
+                .subscribe(conta -> {
+                    conta.setSaldo(conta.getSaldo().add(pixSolicitacaoDTORequest.getValor()));
+                    contaRepository.save(conta).subscribe();
+
+                    PixTransferencia pixTransferencia = pixSolicitacaoDTORequest.mapperToEntity(Status.Aceito);
+                    transferenciaRepository.save(pixTransferencia).subscribe();
+
+                    kafkaTemplate.send("itau-pix-confirmacao", new Gson().toJson(new PixDTOResponse(pixTransferencia.getStatus(), pixTransferencia.getReqId())));
+
+                    System.out.println("Transferência aceita!");
+                });
     }
 }
 
