@@ -8,7 +8,7 @@ public class CadastroBacenDTORequest {
     private Long reqId;
     private String chave;
     private TipoChavePix tipo;
-    private final String banco = "ada";
+    private final String banco = "Ada";
     private String agencia;
     private String conta;
 }
