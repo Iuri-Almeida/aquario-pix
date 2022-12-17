@@ -16,5 +16,5 @@ public class PixDTORequest {
     private final LocalDateTime data = LocalDateTime.now();
     private String contaRemetente;
     private String agenciaRemetente;
-    private final String banco = "Itau";
+    private final String bancoRemetente = "Itau";
 }
