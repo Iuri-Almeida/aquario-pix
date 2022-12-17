@@ -60,8 +60,8 @@ public class PixService {
             transferenciaRepository.findByReqId(pixDTOResponse.getReqId()).subscribe(
                     transferencia -> {
                         transferencia.setStatus(Status.Aceito);
-                        // TODO corrigir o erro ao adicionar o .subscribe() (sem ele não é atualizado no banco)
-                        transferenciaRepository.save(transferencia);
+                        transferenciaRepository.deleteByReqId(transferencia.getReqId()).subscribe();
+                        transferenciaRepository.save(transferencia).subscribe();
                     }
             );
         }
@@ -77,7 +77,7 @@ public class PixService {
                     contaRepository.save(conta).subscribe();
 
                     PixTransferencia pixTransferencia = pixSolicitacaoDTORequest.mapperToEntity(Status.Aceito);
-                    transferenciaRepository.save(pixTransferencia).subscribe();
+                    //transferenciaRepository.save(pixTransferencia).subscribe();
 
                     kafkaTemplate.send("ada-pix-confirmacao", new Gson().toJson(new PixDTOResponse(pixTransferencia.getReqId(), pixTransferencia.getStatus())));
 

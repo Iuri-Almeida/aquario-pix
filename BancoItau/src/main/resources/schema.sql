@@ -19,7 +19,7 @@ create table CONTA(
     saldo numeric not null
 );
 
-create table transferencias (
+create table transferenciasItau (
     reqId varchar primary key not null,
     chave varchar not null,
     valor numeric not null,
