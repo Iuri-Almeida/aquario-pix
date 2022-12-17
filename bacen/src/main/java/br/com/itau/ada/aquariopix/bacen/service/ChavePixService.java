@@ -67,6 +67,7 @@ public class ChavePixService {
         switch (chavePix.getTipo()) {
             case ("CPF"):
                 tipoValido = verificarCpfDaConta(chavePix.getChave(), chavePix.getConta(), chavePix.getAgencia());
+                break;
         }
 
         return tipoValido;
