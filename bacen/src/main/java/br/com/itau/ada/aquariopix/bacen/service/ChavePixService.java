@@ -13,6 +13,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class ChavePixService {
 
@@ -22,9 +24,9 @@ public class ChavePixService {
 
     private final ContaBacenService contaBacenService;
 
-    public ChavePixService(ChavePixRepository chavePixRepository, BacenProducer cadastroChaveProducer, ContaBacenService contaBacenService) {
+    public ChavePixService(ChavePixRepository chavePixRepository, BacenProducer producer, ContaBacenService contaBacenService) {
         this.chavePixRepository = chavePixRepository;
-        this.producer = cadastroChaveProducer;
+        this.producer = producer;
         this.contaBacenService = contaBacenService;
     }
 
@@ -72,15 +74,16 @@ public class ChavePixService {
     private boolean donoDaChaveValido(@NotNull ChavePixSolicitacaoDto chavePix) {
         switch (chavePix.getTipo()) {
             case ("CPF"):
-                return verificarCpfDaConta(chavePix.getChave(), chavePix.getConta(), chavePix.getAgencia());
+                return verificarCpfDaConta(chavePix.getChave(), chavePix.getBanco(), chavePix.getConta(), chavePix.getAgencia());
         }
 
         throw new RuntimeException("Tipo de chave pix não encontrado");
     }
 
-    private boolean verificarCpfDaConta(String cpf, String conta, String agencia){
-        ContaBacen contaBacen = contaBacenService.findByNumeroContaAndAgencia(conta, agencia);
-        return contaBacen.getCpf().equals(cpf);
+    public boolean verificarCpfDaConta(String cpf, String banco, String conta, String agencia){
+        Optional<ContaBacen> contaBacen = contaBacenService.findByBancoContaAndAgencia(banco, conta, agencia);
+        if (contaBacen.isPresent()) return contaBacen.get().getCpf().equals(cpf);
+        throw new RuntimeException("Conta não existente no Bacen");
     }
 
     private MensagemKafkaDto enviaMensagemConfirmacaoChave(ChavePixConfirmacaoDto chavePixConfirmacaoDto) {

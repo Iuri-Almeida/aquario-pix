@@ -23,9 +23,8 @@ public class ContaBacenService {
         return contaBacenRepository.findById(id).get();
     }
 
-    //TODO: VERIFICAR O BANCO TBM! TA DANDO ERRO NO CADASTRO DE CHAVE QUANDO TEM CONTAS DE BANCOS DIFERENTES COM O MESMO NUMERO
-    public ContaBacen findByNumeroContaAndAgencia(String numeroConta, String agencia) {
-        return contaBacenRepository.findByNumeroContaAndAgencia(numeroConta, agencia).get();
+    public Optional<ContaBacen> findByBancoContaAndAgencia(String banco, String numeroConta, String agencia) {
+        return contaBacenRepository.findByBancoContaAndAgencia(banco, numeroConta, agencia);
     }
 
     public void insert(ContaBacen contaBacen) {
