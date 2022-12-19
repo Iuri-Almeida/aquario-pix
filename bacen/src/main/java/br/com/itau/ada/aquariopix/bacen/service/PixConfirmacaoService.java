@@ -25,15 +25,17 @@ public class PixConfirmacaoService {
     }
 
     public MensagemKafkaDto confirmarPixParaRemetente(PixConfirmacaoDto pixConfirmacaoDto) {
-        Optional<PixTransferencia> pixTransferencia = buscarPixTransferencia(pixConfirmacaoDto);
-        atualizarStatusPix(pixConfirmacaoDto, pixTransferencia.get());
+        PixTransferencia pixTransferencia = buscarPixTransferencia(pixConfirmacaoDto);
+        atualizarStatusPix(pixConfirmacaoDto, pixTransferencia);
 
-        String bancoRemetente = pixTransferencia.get().getBancoRemetente();
+        String bancoRemetente = pixTransferencia.getBancoRemetente();
         return enviarConfirmacaoPix(pixConfirmacaoDto, bancoRemetente);
     }
 
-    private @NotNull Optional<PixTransferencia> buscarPixTransferencia(@NotNull PixConfirmacaoDto pixConfirmacaoDto) {
-        return pixTransferenciaRepository.findById(pixConfirmacaoDto.getReqId());
+    private PixTransferencia buscarPixTransferencia(@NotNull PixConfirmacaoDto pixConfirmacaoDto) {
+        Optional<PixTransferencia> pixTransferencia = pixTransferenciaRepository.findById(pixConfirmacaoDto.getReqId());
+        if (pixTransferencia.isPresent()) return pixTransferencia.get();
+        throw new RuntimeException("Não foi encontrado nenhum pix com o id informado");
     }
 
     private void atualizarStatusPix(@NotNull PixConfirmacaoDto pixConfirmacaoDto, @NotNull PixTransferencia entity) {
@@ -42,7 +44,7 @@ public class PixConfirmacaoService {
     }
 
     @Contract("_, _ -> new")
-    private @NotNull MensagemKafkaDto enviarConfirmacaoPix(@NotNull PixConfirmacaoDto pixConfirmacaoDto, String banco) {
+    private @NotNull MensagemKafkaDto enviarConfirmacaoPix(@NotNull PixConfirmacaoDto pixConfirmacaoDto, @NotNull String banco) {
         String topic = definirTopico(banco);
         String key = pixConfirmacaoDto.getReqId();
         String message = new Gson().toJson(pixConfirmacaoDto);
