@@ -73,7 +73,7 @@ public class PixService {
                 .reqId(pixDTO.getReqId())
                 .chave(pixDTO.getChave())
                 .valor(valorPix)
-                .dataHora(pixDTO.getData())
+                .dataHora(pixDTO.getDataHora())
                 .bancoRemetente(pixDTO.getBancoRemetente())
                 .contaRemetente(pixDTO.getContaRemetente())
                 .agenciaRemetente(pixDTO.getAgenciaRemetente())

@@ -133,6 +133,7 @@ public class PixServiceTest {
 
         when(contaRepository.findByCpf(any())).thenReturn(Mono.just(contaRemetente));
         when(contaRepository.save(any())).thenReturn(Mono.just(contaRemetente));
+        when(transferenciaRepository.save(any())).thenReturn(Mono.just(new PixTransferencia()));
         pixService.getSolicitacaoPix(mensagem);
 
         Assert.assertEquals(new BigDecimal(100),contaRemetente.getSaldo());
