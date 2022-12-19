@@ -153,7 +153,7 @@ class ChavePixServiceTest {
     }
 
     @Test
-    void tipoChaveInvalidoTest(){
+    void tipoChaveNaoEncontradoTest(){
         ContaBacen contaBacenMock = new ContaBacen(
                 1L,
                 "Maria",
