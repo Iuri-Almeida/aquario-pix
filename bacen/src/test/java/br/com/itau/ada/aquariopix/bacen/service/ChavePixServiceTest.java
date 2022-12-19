@@ -59,7 +59,7 @@ class ChavePixServiceTest {
         );
 
         String mensagemEsperada = new Gson().toJson(solicitacaoMock.mapperToConfirmacaoDto(StatusSolicitacao.Aceito));
-        when(contaBacenService.findByNumeroContaAndAgencia(solicitacaoMock.getConta(), solicitacaoMock.getAgencia())).thenReturn(Optional.of(contaBacenMock));
+        when(contaBacenService.findByBancoContaAndAgencia(solicitacaoMock.getBanco(), solicitacaoMock.getConta(), solicitacaoMock.getAgencia())).thenReturn(Optional.of(contaBacenMock));
 
         MensagemKafkaDto mensagemEnviada = chavePixService.cadastrarChavePix(solicitacaoMock);
 
@@ -90,7 +90,7 @@ class ChavePixServiceTest {
         );
 
         String mensagemEsperada = new Gson().toJson(solicitacaoMock.mapperToConfirmacaoDto(StatusSolicitacao.Aceito));
-        when(contaBacenService.findByNumeroContaAndAgencia(solicitacaoMock.getConta(), solicitacaoMock.getAgencia())).thenReturn(Optional.of(contaBacenMock));
+        when(contaBacenService.findByBancoContaAndAgencia(solicitacaoMock.getConta(), solicitacaoMock.getConta(), solicitacaoMock.getAgencia())).thenReturn(Optional.of(contaBacenMock));
 
         MensagemKafkaDto mensagemEnviada = chavePixService.cadastrarChavePix(solicitacaoMock);
 

@@ -27,10 +27,11 @@ public class ContaBacenController {
 
     @GetMapping(value = "/numeroContaAndAgencia")
     public ResponseEntity<ContaBacen> findByNumeroContaAndAgencia(
+            @RequestParam(value = "banco", defaultValue = "") String banco,
             @RequestParam(value = "numeroConta", defaultValue = "") String numeroConta,
             @RequestParam(value = "agencia", defaultValue = "") String agencia
     ) {
-        return ResponseEntity.ok().body(contaBacenService.findByNumeroContaAndAgencia(numeroConta, agencia).get());
+        return ResponseEntity.ok().body(contaBacenService.findByBancoContaAndAgencia(banco, numeroConta, agencia).get());
     }
 
     @PostMapping

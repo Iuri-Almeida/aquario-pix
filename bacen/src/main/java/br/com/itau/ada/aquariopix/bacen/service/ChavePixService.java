@@ -74,14 +74,14 @@ public class ChavePixService {
     private boolean donoDaChaveValido(@NotNull ChavePixSolicitacaoDto chavePix) {
         switch (chavePix.getTipo()) {
             case ("CPF"):
-                return verificarCpfDaConta(chavePix.getChave(), chavePix.getConta(), chavePix.getAgencia());
+                return verificarCpfDaConta(chavePix.getChave(), chavePix.getBanco(), chavePix.getConta(), chavePix.getAgencia());
         }
 
         throw new RuntimeException("Tipo de chave pix não encontrado");
     }
 
-    public boolean verificarCpfDaConta(String cpf, String conta, String agencia){
-        Optional<ContaBacen> contaBacen = contaBacenService.findByNumeroContaAndAgencia(conta, agencia);
+    public boolean verificarCpfDaConta(String cpf, String banco, String conta, String agencia){
+        Optional<ContaBacen> contaBacen = contaBacenService.findByBancoContaAndAgencia(banco, conta, agencia);
         if (contaBacen.isPresent()) return contaBacen.get().getCpf().equals(cpf);
         throw new RuntimeException("Conta não existente no Bacen");
     }
