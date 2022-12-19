@@ -4,7 +4,6 @@ import br.com.itau.ada.aquariopix.bacen.enums.StatusSolicitacao;
 import br.com.itau.ada.aquariopix.bacen.model.PixTransferencia;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.apache.kafka.common.protocol.types.Field;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -16,13 +15,13 @@ public class PixSolicitacaoDto {
     private String reqId;
     private String chave;
     private BigDecimal valor;
-    private String dataHora;
+    private LocalDateTime dataHora;
     private String bancoRemetente;
     private String contaRemetente;
     private String agenciaRemetente;
 
     public PixTransferencia mapperToEntity(StatusSolicitacao status){
-        return new PixTransferencia(this.reqId, this.chave, this.valor, LocalDateTime.parse(this.dataHora), this.bancoRemetente, this.contaRemetente, this. agenciaRemetente, status);
+        return new PixTransferencia(this.reqId, this.chave, this.valor, this.dataHora, this.bancoRemetente, this.contaRemetente, this. agenciaRemetente, status);
     }
 
 }
