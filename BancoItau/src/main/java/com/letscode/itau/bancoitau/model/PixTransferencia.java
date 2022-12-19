@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "transferencias")
+@Table(name = "transferenciasItau")
 public class PixTransferencia {
 
     @Column("reqId")
