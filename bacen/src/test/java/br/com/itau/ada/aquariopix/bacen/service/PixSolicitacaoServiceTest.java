@@ -38,7 +38,7 @@ class PixSolicitacaoServiceTest {
     }
 
     @Test
-    void pixSolicitacaoItauTest(){
+    void pixSolicitacaoItauTest() {
         ChavePixDto chavePixMock = new ChavePixDto(
                 "44809313840",
                 "CPF",
@@ -97,5 +97,45 @@ class PixSolicitacaoServiceTest {
         Assertions.assertEquals("pix-solicitacao-ada", mensagemEnviada.getTopic());
         Assertions.assertEquals(solicitacaoMock.getReqId(), mensagemEnviada.getKey());
         Assertions.assertEquals(mensagemEsperada, mensagemEnviada.getMessage());
+    }
+
+    @Test
+    void chavePixNaoEncontradaTest() {
+        PixSolicitacaoDto solicitacaoMock = new PixSolicitacaoDto(
+                "123",
+                "44809313840",
+                new BigDecimal(50.00),
+                LocalDateTime.now(),
+                "Itau",
+                "021",
+                "25119"
+        );
+
+        Assertions.assertThrows(RuntimeException.class, () -> pixSolicitacaoService.enviarPix(solicitacaoMock), "Chave não encontrada");
+    }
+
+    @Test
+    void bancoNaoEncontradoTest() {
+        ChavePixDto chavePixMock = new ChavePixDto(
+                "44809313840",
+                "CPF",
+                "ada",
+                "001",
+                "25120"
+        );
+
+        PixSolicitacaoDto solicitacaoMock = new PixSolicitacaoDto(
+                "123",
+                "44809313840",
+                new BigDecimal(50.00),
+                LocalDateTime.now(),
+                "Itau",
+                "021",
+                "25119"
+        );
+
+        when(chavePixService.consultarChavePix(solicitacaoMock.getChave())).thenReturn(chavePixMock);
+
+        Assertions.assertThrows(RuntimeException.class, () -> pixSolicitacaoService.enviarPix(solicitacaoMock), "Banco não encontrado");
     }
 }
