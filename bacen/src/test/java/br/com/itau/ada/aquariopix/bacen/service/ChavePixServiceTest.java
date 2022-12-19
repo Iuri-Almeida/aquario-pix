@@ -1,7 +1,6 @@
 package br.com.itau.ada.aquariopix.bacen.service;
 
 import br.com.itau.ada.aquariopix.bacen.dto.MensagemKafkaDto;
-import br.com.itau.ada.aquariopix.bacen.dto.chavePix.ChavePixConfirmacaoDto;
 import br.com.itau.ada.aquariopix.bacen.dto.chavePix.ChavePixSolicitacaoDto;
 import br.com.itau.ada.aquariopix.bacen.enums.StatusSolicitacao;
 import br.com.itau.ada.aquariopix.bacen.kafka.producer.BacenProducer;
