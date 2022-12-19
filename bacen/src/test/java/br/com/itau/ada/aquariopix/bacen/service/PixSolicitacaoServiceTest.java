@@ -16,7 +16,6 @@ import org.mockito.MockitoAnnotations;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 class PixSolicitacaoServiceTest {
@@ -53,7 +52,7 @@ class PixSolicitacaoServiceTest {
                 "123",
                 "44809313840",
                 new BigDecimal(50.00),
-                LocalDateTime.now().toString(),
+                LocalDateTime.now(),
                 "Ada",
                 "001",
                 "25120"
@@ -77,14 +76,13 @@ class PixSolicitacaoServiceTest {
                 "Ada",
                 "001",
                 "25120"
-
         );
 
         PixSolicitacaoDto solicitacaoMock = new PixSolicitacaoDto(
                 "123",
                 "44809313840",
                 new BigDecimal(50.00),
-                LocalDateTime.now().toString(),
+                LocalDateTime.now(),
                 "Itau",
                 "021",
                 "25119"
