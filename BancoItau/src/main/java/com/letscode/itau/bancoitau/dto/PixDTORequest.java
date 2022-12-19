@@ -13,7 +13,7 @@ public class PixDTORequest {
     private final String reqId = String.valueOf(new Random().nextInt(Integer.MAX_VALUE));
     private String chave;
     private BigDecimal valor;
-    private final LocalDateTime data = LocalDateTime.now();
+    private final LocalDateTime dataHora = LocalDateTime.now();
     private String contaRemetente;
     private String agenciaRemetente;
     private final String bancoRemetente = "Itau";
