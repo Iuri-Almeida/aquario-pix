@@ -93,4 +93,48 @@ class PixConfirmacaoServiceTest {
         assertEquals(mensagemEsperada, mensagemEnviada.getMessage());
     }
 
+    @Test
+    void pixNaoEncontradoTest(){
+        PixConfirmacaoDto pixConfirmacaoMock = new PixConfirmacaoDto(
+                "123",
+                StatusSolicitacao.Pendente
+        );
+
+        PixTransferencia pixTransferenciaMock = new PixTransferencia(
+                "123",
+                "44809313840",
+                new BigDecimal(50.00),
+                LocalDateTime.now(),
+                "Itau",
+                "021",
+                "25119",
+                StatusSolicitacao.Pendente
+        );
+
+        Assertions.assertThrows(RuntimeException.class, () -> pixConfirmacaoService.confirmarPixParaRemetente(pixConfirmacaoMock), "Pix não encontrado");
+    }
+
+    @Test
+    void bancoNaoEncontradoTest(){
+        PixConfirmacaoDto pixConfirmacaoMock = new PixConfirmacaoDto(
+                "123",
+                StatusSolicitacao.Pendente
+        );
+
+        PixTransferencia pixTransferenciaMock = new PixTransferencia(
+                "123",
+                "44809313840",
+                new BigDecimal(50.00),
+                LocalDateTime.now(),
+                "itau",
+                "021",
+                "25119",
+                StatusSolicitacao.Pendente
+        );
+
+        String mensagemEsperada = new Gson().toJson(pixConfirmacaoMock);
+        when(pixTransferenciaRepository.findById(pixTransferenciaMock.getReqId())).thenReturn(Optional.of(pixTransferenciaMock));
+
+        Assertions.assertThrows(RuntimeException.class, () -> pixConfirmacaoService.confirmarPixParaRemetente(pixConfirmacaoMock), "Banco não cadastrado");
+    }
 }
