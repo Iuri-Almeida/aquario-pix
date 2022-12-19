@@ -15,7 +15,7 @@ public class BacenProducer {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void publish(String topic, String key, String message) {
+    public void publicar(String topic, String key, String message) {
         kafkaTemplate.send(topic, key, message).addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
             @Override
             public void onFailure(Throwable ex) {
