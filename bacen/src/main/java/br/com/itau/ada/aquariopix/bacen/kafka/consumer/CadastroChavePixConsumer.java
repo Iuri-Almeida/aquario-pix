@@ -19,7 +19,7 @@ public class CadastroChavePixConsumer {
     @KafkaListener(
             id = "${spring.kafka.consumer.cadastro-chavePix-itau.group-id}",
             topics = "${topic.cadastro-chavePix-itau.consumer.name}")
-    public void listenCadastroChavePixItau(String mensagem, Acknowledgment ack){
+    public void cadastroChavePixItau(String mensagem, Acknowledgment ack){
         cadastrarChavePix(mensagem);
 
         ack.acknowledge();
@@ -28,7 +28,7 @@ public class CadastroChavePixConsumer {
     @KafkaListener(
             id = "ada-cadastro-chavepix",
             topics = "ada-cadastro-chavepix-solicitacao")
-    public void listenCadastroChavePixAda(String mensagem, Acknowledgment ack){
+    public void cadastroChavePixAda(String mensagem, Acknowledgment ack){
         cadastrarChavePix(mensagem);
 
         ack.acknowledge();
@@ -36,7 +36,7 @@ public class CadastroChavePixConsumer {
 
     private void cadastrarChavePix(String mensagem) {
         ChavePixSolicitacaoDto chavePixDto = parseMensagem(mensagem);
-        chavePixService.cadastrarChavePixEnviaMensagem(chavePixDto);
+        chavePixService.cadastrarChavePix(chavePixDto);
     }
 
     private ChavePixSolicitacaoDto parseMensagem(String mensagem) {

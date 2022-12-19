@@ -3,6 +3,7 @@ package br.com.itau.ada.aquariopix.bacen.service;
 import br.com.itau.ada.aquariopix.bacen.model.ContaBacen;
 import br.com.itau.ada.aquariopix.bacen.repository.ContaBacenRepository;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class ContaBacenService {
         return contaBacenRepository.findById(id).get();
     }
 
+    //TODO: VERIFICAR O BANCO TBM! TA DANDO ERRO NO CADASTRO DE CHAVE QUANDO TEM CONTAS DE BANCOS DIFERENTES COM O MESMO NUMERO
     public ContaBacen findByNumeroContaAndAgencia(String numeroConta, String agencia) {
         return contaBacenRepository.findByNumeroContaAndAgencia(numeroConta, agencia).get();
     }
@@ -42,7 +44,7 @@ public class ContaBacenService {
         contaBacenRepository.deleteById(id);
     }
 
-    private void updateData(ContaBacen contaDb, ContaBacen contaBacen) {
+    private void updateData(ContaBacen contaDb, @NotNull ContaBacen contaBacen) {
 
         if (Optional.ofNullable(contaBacen.getNome()).isPresent()) {
             contaDb.setNome(contaBacen.getNome());

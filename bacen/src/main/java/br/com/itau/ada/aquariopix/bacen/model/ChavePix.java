@@ -1,6 +1,6 @@
 package br.com.itau.ada.aquariopix.bacen.model;
 
-import br.com.itau.ada.aquariopix.bacen.dto.ChavePixDto;
+import br.com.itau.ada.aquariopix.bacen.dto.chavePix.ChavePixDto;
 import com.sun.istack.NotNull;
 import lombok.*;
 

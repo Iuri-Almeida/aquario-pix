@@ -1,6 +1,7 @@
 package br.com.itau.ada.aquariopix.bacen.service;
 
-import br.com.itau.ada.aquariopix.bacen.dto.ChavePixDto;
+import br.com.itau.ada.aquariopix.bacen.dto.MensagemKafkaDto;
+import br.com.itau.ada.aquariopix.bacen.dto.chavePix.ChavePixDto;
 import br.com.itau.ada.aquariopix.bacen.dto.chavePix.ChavePixConfirmacaoDto;
 import br.com.itau.ada.aquariopix.bacen.dto.chavePix.ChavePixSolicitacaoDto;
 import br.com.itau.ada.aquariopix.bacen.enums.StatusSolicitacao;
@@ -8,6 +9,8 @@ import br.com.itau.ada.aquariopix.bacen.kafka.producer.BacenProducer;
 import br.com.itau.ada.aquariopix.bacen.model.ContaBacen;
 import br.com.itau.ada.aquariopix.bacen.repository.ChavePixRepository;
 import com.google.gson.Gson;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,13 +18,13 @@ public class ChavePixService {
 
     private final ChavePixRepository chavePixRepository;
 
-    private final BacenProducer cadastroChaveProducer;
+    private final BacenProducer producer;
 
     private final ContaBacenService contaBacenService;
 
     public ChavePixService(ChavePixRepository chavePixRepository, BacenProducer cadastroChaveProducer, ContaBacenService contaBacenService) {
         this.chavePixRepository = chavePixRepository;
-        this.cadastroChaveProducer = cadastroChaveProducer;
+        this.producer = cadastroChaveProducer;
         this.contaBacenService = contaBacenService;
     }
 
@@ -29,7 +32,17 @@ public class ChavePixService {
         return chavePixRepository.findById(tipo, chave).isPresent();
     }
 
-    public ChavePixConfirmacaoDto cadastrarChavePix(ChavePixSolicitacaoDto chavePixDto) {
+    public ChavePixDto consultarChavePix (String chave){
+        return chavePixRepository.findById(chave).orElseThrow(() -> new RuntimeException("Chave não encontrada")).mapperToChavePixDto();
+    }
+
+    public MensagemKafkaDto cadastrarChavePix(ChavePixSolicitacaoDto chavePixDto) {
+        ChavePixConfirmacaoDto chavePixConfirmacaoDto = salvarChave(chavePixDto);
+
+        return enviaMensagemConfirmacaoChave(chavePixConfirmacaoDto);
+    }
+
+    public ChavePixConfirmacaoDto salvarChave(ChavePixSolicitacaoDto chavePixDto) {
         ChavePixConfirmacaoDto chavePixConfirmacao = validarChave(chavePixDto);
 
         if (chavePixConfirmacao.getStatus() == StatusSolicitacao.Aceito){
@@ -37,12 +50,6 @@ public class ChavePixService {
         }
 
         return chavePixConfirmacao;
-    }
-
-    public void cadastrarChavePixEnviaMensagem(ChavePixSolicitacaoDto chavePixDto) {
-        ChavePixConfirmacaoDto chavePixConfirmacaoDto = cadastrarChavePix(chavePixDto);
-
-        enviaMensagemConfirmacaoChave(chavePixConfirmacaoDto);
     }
 
     private ChavePixConfirmacaoDto validarChave(ChavePixSolicitacaoDto chavePix) {
@@ -61,16 +68,14 @@ public class ChavePixService {
         return chavePixConfirmacaoDto;
     }
 
-    private boolean donoDaChaveValido(ChavePixSolicitacaoDto chavePix) {
-        boolean tipoValido = false;
-
+    //Está com switch pensando na implementação futura de diferentes tipos de chave Pix
+    private boolean donoDaChaveValido(@NotNull ChavePixSolicitacaoDto chavePix) {
         switch (chavePix.getTipo()) {
             case ("CPF"):
-                tipoValido = verificarCpfDaConta(chavePix.getChave(), chavePix.getConta(), chavePix.getAgencia());
-                break;
+                return verificarCpfDaConta(chavePix.getChave(), chavePix.getConta(), chavePix.getAgencia());
         }
 
-        return tipoValido;
+        throw new RuntimeException("Tipo de chave pix não encontrado");
     }
 
     private boolean verificarCpfDaConta(String cpf, String conta, String agencia){
@@ -78,19 +83,18 @@ public class ChavePixService {
         return contaBacen.getCpf().equals(cpf);
     }
 
-    private void enviaMensagemConfirmacaoChave(ChavePixConfirmacaoDto chavePixConfirmacaoDto) {
-        String message = new Gson().toJson(chavePixConfirmacaoDto);
-        String key = chavePixConfirmacaoDto.getReqId() + chavePixConfirmacaoDto.getBanco();
-
+    private MensagemKafkaDto enviaMensagemConfirmacaoChave(ChavePixConfirmacaoDto chavePixConfirmacaoDto) {
         String topic = definirTopico(chavePixConfirmacaoDto.getBanco());
-        cadastroChaveProducer.publish(topic, key, message);
+        String key = chavePixConfirmacaoDto.getReqId();
+        String message = new Gson().toJson(chavePixConfirmacaoDto);
+
+        producer.publicar(topic, key, message);
+
+        return new MensagemKafkaDto(topic, key, message);
     }
 
-    public ChavePixDto consultarChavePix (String chave){
-        return chavePixRepository.findById(chave).orElseThrow(() -> new RuntimeException("Chave não encontrada")).mapperToChavePixDto();
-    }
-
-    private String definirTopico(String banco) {
+    @Contract(pure = true)
+    private @NotNull String definirTopico(@NotNull String banco) {
         switch (banco) {
             case ("Itau"):
                 return "confirmacao-cadastro-chavepix-itau";
@@ -99,6 +103,5 @@ public class ChavePixService {
         }
         throw new RuntimeException("Banco não cadastrado");
     }
-
 
 }

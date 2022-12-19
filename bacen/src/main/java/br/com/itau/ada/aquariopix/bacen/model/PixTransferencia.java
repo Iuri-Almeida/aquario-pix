@@ -4,6 +4,7 @@ import br.com.itau.ada.aquariopix.bacen.enums.StatusSolicitacao;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -19,12 +20,25 @@ import java.time.LocalDateTime;
 public class PixTransferencia {
 
     @Id
+    @NotNull
     private String reqId;
+
+    @NotNull
     private String chave;
+
+    @NotNull
     private BigDecimal valor;
+
+    @NotNull
     private LocalDateTime dataHora;
+
+    @NotNull
     private String bancoRemetente;
+
+    @NotNull
     private String contaRemetente;
+
+    @NotNull
     private String agenciaRemetente;
 
     @Enumerated(EnumType.STRING)

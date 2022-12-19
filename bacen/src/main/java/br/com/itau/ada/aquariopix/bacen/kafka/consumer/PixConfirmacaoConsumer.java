@@ -17,8 +17,8 @@ public class PixConfirmacaoConsumer {
     @KafkaListener(
             id = "${spring.kafka.consumer.pixConfirmacao-itau.group-id}",
             topics = "${topic.consumer.itauPixConfirmacao.name}")
-    public void listenItauEnvioPix(String message, Acknowledgment ack){
-        parseMensagemEnvioPix(message);
+    public void itauConfirmacaoPix(String message, Acknowledgment ack){
+        confirmacaoPix(message);
 
         ack.acknowledge();
     }
@@ -26,15 +26,15 @@ public class PixConfirmacaoConsumer {
     @KafkaListener(
             id = "${spring.kafka.consumer.pixConfirmacao-ada.group-id}",
             topics = "${topic.consumer.adaPixConfirmacao.name}")
-    public void listenAdaEnvioPix(String message, Acknowledgment ack){
-        parseMensagemEnvioPix(message);
+    public void adaConfirmacaoPix(String message, Acknowledgment ack){
+        confirmacaoPix(message);
 
         ack.acknowledge();
     }
 
-    private void parseMensagemEnvioPix(String messagem) {
+    private void confirmacaoPix(String messagem) {
         PixConfirmacaoDto pixDto = parseMensagem(messagem);
-        pixConfirmacaoService.enviarConfirmacao(pixDto);
+        pixConfirmacaoService.confirmarPixParaRemetente(pixDto);
     }
 
     private PixConfirmacaoDto parseMensagem(String messagem) {
