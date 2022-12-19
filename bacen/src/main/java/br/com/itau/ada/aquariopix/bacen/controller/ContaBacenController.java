@@ -30,7 +30,7 @@ public class ContaBacenController {
             @RequestParam(value = "numeroConta", defaultValue = "") String numeroConta,
             @RequestParam(value = "agencia", defaultValue = "") String agencia
     ) {
-        return ResponseEntity.ok().body(contaBacenService.findByNumeroContaAndAgencia(numeroConta, agencia));
+        return ResponseEntity.ok().body(contaBacenService.findByNumeroContaAndAgencia(numeroConta, agencia).get());
     }
 
     @PostMapping
