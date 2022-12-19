@@ -35,7 +35,7 @@ public class PixService {
                 conta -> {
                     if (conta.getSaldo().compareTo(pixDTO.getValor()) >= 0) {
                         kafkaTemplate.send("itau-pix-solicitacao", mensagem);
-                        PixTransferencia pixTransferencia = new PixTransferencia(pixDTO.getReqId(), pixDTO.getChave(), pixDTO.getValor(), pixDTO.getData(), pixDTO.getBancoRemetente(), pixDTO.getContaRemetente(), pixDTO.getAgenciaRemetente());
+                        PixTransferencia pixTransferencia = new PixTransferencia(pixDTO.getReqId(), pixDTO.getChave(), pixDTO.getValor(), pixDTO.getDataHora(), pixDTO.getBancoRemetente(), pixDTO.getContaRemetente(), pixDTO.getAgenciaRemetente());
                         transferenciaRepository.save(pixTransferencia).subscribe(System.out::println);
                         BigDecimal novoSaldo = conta.getSaldo().subtract(pixDTO.getValor());
                         conta.setSaldo(novoSaldo);
@@ -92,7 +92,7 @@ public class PixService {
                     contaRepository.save(conta).subscribe();
 
                     PixTransferencia pixTransferencia = pixSolicitacaoDTORequest.mapperToEntity(Status.Aceito);
-                    //transferenciaRepository.save(pixTransferencia).subscribe();
+                    transferenciaRepository.save(pixTransferencia).subscribe();
 
                     kafkaTemplate.send("itau-pix-confirmacao", new Gson().toJson(new PixDTOResponse(pixTransferencia.getStatus(), pixTransferencia.getReqId())));
 

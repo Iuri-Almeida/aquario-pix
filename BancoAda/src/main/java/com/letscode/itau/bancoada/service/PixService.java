@@ -33,7 +33,7 @@ public class PixService {
                     if (this.isSaldoMaiorOuIgualQueSaldoSolicitado(conta.getSaldo(), pixDTORequest.getValor())) {
                         this.publicarMensagem("ada-pix-solicitacao", msg);
 
-                        PixTransferencia pixTransferencia = new PixTransferencia(pixDTORequest.getReqId(), pixDTORequest.getChave(), pixDTORequest.getValor(), pixDTORequest.getData(), "Ada", pixDTORequest.getContaRemetente(), pixDTORequest.getAgenciaRemetente());
+                        PixTransferencia pixTransferencia = new PixTransferencia(pixDTORequest.getReqId(), pixDTORequest.getChave(), pixDTORequest.getValor(), pixDTORequest.getDataHora(), "Ada", pixDTORequest.getContaRemetente(), pixDTORequest.getAgenciaRemetente());
                         transferenciaRepository.save(pixTransferencia).subscribe();
 
                         this.subtrairSaldo(conta, pixDTORequest.getValor());
@@ -84,7 +84,7 @@ public class PixService {
                     contaRepository.save(conta).subscribe();
 
                     PixTransferencia pixTransferencia = pixSolicitacaoDTORequest.mapperToEntity(Status.Aceito);
-                    //transferenciaRepository.save(pixTransferencia).subscribe();
+                    transferenciaRepository.save(pixTransferencia).subscribe();
 
                     PixDTOResponse pixDTOResponse = new PixDTOResponse(pixTransferencia.getReqId(), pixTransferencia.getStatus());
                     this.publicarMensagem("ada-pix-confirmacao", new Gson().toJson(pixDTOResponse));

@@ -21,7 +21,7 @@ public class PixDTORequest {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private BigDecimal valor;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private final LocalDateTime data = LocalDateTime.now();
+    private final LocalDateTime dataHora = LocalDateTime.now();
     private String contaRemetente;
     private String agenciaRemetente;
     private final String bancoRemetente = "Ada";
