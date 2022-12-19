@@ -26,60 +26,131 @@ public class PixService {
     private final ContaRepository contaRepository;
     private final TransferenciaRepository transferenciaRepository;
 
+    private String criaMensagemKafka(PixDTORequest pixDTO) {
+        return new Gson().toJson(pixDTO);
+    }
+
+    private boolean hasSaldoSuficiente(BigDecimal valorPix, BigDecimal saldoEmConta) {
+        return saldoEmConta.compareTo(valorPix) >= 0;
+    }
 
     public Mono<ResponseEntity<Conta>> enviaPix(PixDTORequest pixDTO) {
         //TODO confirmacao existencia chave
         //GET /api/bacen/pix/cahves?tipo=CPF&cahve=465468456
-        String mensagem = new Gson().toJson(pixDTO);
+        String mensagem = criaMensagemKafka(pixDTO);
         return contaRepository.findByNumeroContaAndAgencia(pixDTO.getContaRemetente(), pixDTO.getAgenciaRemetente()).flatMap(
                 conta -> {
-                    if (conta.getSaldo().compareTo(pixDTO.getValor()) >= 0) {
-                        kafkaTemplate.send("itau-pix-solicitacao", mensagem);
-                        PixTransferencia pixTransferencia = new PixTransferencia(pixDTO.getReqId(), pixDTO.getChave(), pixDTO.getValor(), pixDTO.getData(), pixDTO.getBancoRemetente(), pixDTO.getContaRemetente(), pixDTO.getAgenciaRemetente());
-                        transferenciaRepository.save(pixTransferencia).subscribe(System.out::println);
-                        BigDecimal novoSaldo = conta.getSaldo().subtract(pixDTO.getValor());
+                    BigDecimal valorPix = pixDTO.getValor();
+                    BigDecimal saldoEmConta = conta.getSaldo();
+                    if (hasSaldoSuficiente(valorPix, saldoEmConta)) {
+                        enviaSolicitacaoKafkaPix(mensagem);
+                        PixTransferencia pixTransferencia = criaTransferencia(pixDTO, valorPix);
+                        salvaTransferencia(pixTransferencia);
+                        BigDecimal novoSaldo = calculaNovoSaldo(valorPix, saldoEmConta);
                         conta.setSaldo(novoSaldo);
-                        return contaRepository.save(conta).map(ResponseEntity::ok);
+                        return atualizaContaComNovoSaldo(conta);
                     }
                     return Mono.error(new RuntimeException("Sem saldo suficiente"));
                 }
         );
     }
 
+    private Mono<ResponseEntity<Conta>> atualizaContaComNovoSaldo(Conta conta) {
+        return contaRepository.save(conta).map(ResponseEntity::ok);
+    }
+
+    private BigDecimal calculaNovoSaldo(BigDecimal valorPix, BigDecimal saldoEmConta) {
+        BigDecimal novoSaldo = saldoEmConta.subtract(valorPix);
+        return novoSaldo;
+    }
+
+    private void salvaTransferencia(PixTransferencia pixTransferencia) {
+        transferenciaRepository.save(pixTransferencia).subscribe(System.out::println);
+    }
+
+    private PixTransferencia criaTransferencia(PixDTORequest pixDTO, BigDecimal valorPix) {
+        PixTransferencia pixTransferencia = PixTransferencia.builder()
+                .reqId(pixDTO.getReqId())
+                .chave(pixDTO.getChave())
+                .valor(valorPix)
+                .dataHora(pixDTO.getData())
+                .bancoRemetente(pixDTO.getBancoRemetente())
+                .contaRemetente(pixDTO.getContaRemetente())
+                .agenciaRemetente(pixDTO.getAgenciaRemetente())
+                .build();
+        return pixTransferencia;
+    }
+
+    private void enviaSolicitacaoKafkaPix(String mensagem) {
+        kafkaTemplate.send("itau-pix-solicitacao", mensagem);
+    }
+
     @KafkaListener(id = "myId2", topics = "pix-confirmacao-itau")
     public void getStatusBacenPix(String mensagem) {
-        PixDTOResponse pixDTOResponse = new Gson().fromJson(mensagem, PixDTOResponse.class);
-        if (Status.Recusado.equals(pixDTOResponse.getStatus())) {
+        PixDTOResponse pixDTOResponse = criaPixDTOResponse(mensagem);
+        if (pixRecusado(pixDTOResponse)) {
             System.out.println("Rollback de pix");
-            String reqId = pixDTOResponse.getReqId();
+            String reqId = getReqId(pixDTOResponse);
             transferenciaRepository.findById(reqId).subscribe(transferencia -> {
-                transferencia.setStatus(Status.Recusado);
-                transferenciaRepository.deleteByReqId(transferencia.getReqId()).subscribe();
-                transferenciaRepository.save(transferencia).subscribe();
+                mudaStatusDaTransferencia(transferencia, Status.Recusado);
+                deletaTransferenciaComStatusPendente(transferencia);
+                salvaTransferenciaComNovoStatus(transferencia);
 
                 String agencia = transferencia.getAgenciaRemetente();
                 String numeroConta = transferencia.getContaRemetente();
                 BigDecimal valor = transferencia.getValor();
 
-                contaRepository.findByNumeroContaAndAgencia(numeroConta, agencia).subscribe(
-                        conta -> {
-                            BigDecimal saldo = conta.getSaldo();
-                            BigDecimal novoSaldo = saldo.add(valor);
-                            conta.setSaldo(novoSaldo);
-                            contaRepository.save(conta).subscribe();
-                        }
-                );
+                rollbackDoPix(agencia, numeroConta, valor);
             });
-        } else if (Status.Aceito.equals(pixDTOResponse.getStatus())) {
-            transferenciaRepository.findByReqId(pixDTOResponse.getReqId()).subscribe(
+        } else if (pixAceito(pixDTOResponse)) {
+            transferenciaRepository.findByReqId(getReqId(pixDTOResponse)).subscribe(
                     transferencia -> {
-                        transferencia.setStatus(Status.Aceito);
+                        mudaStatusDaTransferencia(transferencia, Status.Aceito);
                         // TODO corrigir o erro ao adicionar o .subscribe() (sem ele não é atualizado no banco)
-                        transferenciaRepository.deleteByReqId(transferencia.getReqId()).subscribe();
-                        transferenciaRepository.save(transferencia).subscribe();
+                        deletaTransferenciaComStatusPendente(transferencia);
+                        salvaTransferenciaComNovoStatus(transferencia);
                     }
             );
         }
+    }
+
+    private boolean pixAceito(PixDTOResponse pixDTOResponse) {
+        return Status.Aceito.equals(pixDTOResponse.getStatus());
+    }
+
+    private void rollbackDoPix(String agencia, String numeroConta, BigDecimal valor) {
+        contaRepository.findByNumeroContaAndAgencia(numeroConta, agencia).subscribe(
+                conta -> {
+                    BigDecimal saldo = conta.getSaldo();
+                    BigDecimal novoSaldo = saldo.add(valor);
+                    conta.setSaldo(novoSaldo);
+                    contaRepository.save(conta).subscribe();
+                }
+        );
+    }
+
+    private void salvaTransferenciaComNovoStatus(PixTransferencia transferencia) {
+        transferenciaRepository.save(transferencia).subscribe();
+    }
+
+    private void deletaTransferenciaComStatusPendente(PixTransferencia transferencia) {
+        transferenciaRepository.deleteByReqId(transferencia.getReqId()).subscribe();
+    }
+
+    private void mudaStatusDaTransferencia(PixTransferencia transferencia, Status recusado) {
+        transferencia.setStatus(recusado);
+    }
+
+    private String getReqId(PixDTOResponse pixDTOResponse) {
+        return pixDTOResponse.getReqId();
+    }
+
+    private boolean pixRecusado(PixDTOResponse pixDTOResponse) {
+        return Status.Recusado.equals(pixDTOResponse.getStatus());
+    }
+
+    private PixDTOResponse criaPixDTOResponse(String mensagem) {
+        return new Gson().fromJson(mensagem, PixDTOResponse.class);
     }
 
     @KafkaListener(groupId = "myId5", topics = "pix-solicitacao-itau")
