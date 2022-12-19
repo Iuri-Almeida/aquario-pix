@@ -65,12 +65,56 @@ services:
     expose:
       - "29092"
     environment:
+      KAFKA_NUM_PARTITIONS: 5
+      KAFKA_MIN_INSYNC_REPLICAS: 1
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 2
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker1:29092,PLAINTEXT_HOST://localhost:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+    networks:
+      - backend
+
+  broker2:
+    image: confluentinc/cp-kafka:6.1.1
+    container_name: broker2
+    ports:
+      - "9093:9092"
+    expose:
+      - "29093"
+    environment:
+      KAFKA_NUM_PARTITIONS: 5
       KAFKA_MIN_INSYNC_REPLICAS: 1
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 2
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker2:29093,PLAINTEXT_HOST://localhost:9093
+    depends_on:
+      - zookeeper
+    networks:
+      - backend
+
+  broker3:
+    image: confluentinc/cp-kafka:6.1.1
+    container_name: broker3
+    ports:
+      - "9094:9092"
+    expose:
+      - "29094"
+    environment:
+      KAFKA_NUM_PARTITIONS: 5
+      KAFKA_MIN_INSYNC_REPLICAS: 1
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 2
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker3:29094,PLAINTEXT_HOST://localhost:9094
     depends_on:
       - zookeeper
     networks:
@@ -83,7 +127,7 @@ services:
       - "8080:8080"
     restart: "no"
     environment:
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=broker1:29092
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=broker1:29092,broker2:29093,broker3:29094
       - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
       - KAFKA_CLUSTERS_0_READONLY=false
     depends_on:

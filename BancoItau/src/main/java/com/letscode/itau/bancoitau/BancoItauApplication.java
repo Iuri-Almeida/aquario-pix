@@ -15,12 +15,4 @@ public class BancoItauApplication {
         SpringApplication.run(BancoItauApplication.class, args);
     }
 
-    @Bean
-    public NewTopic topic() {
-        return TopicBuilder.name("itau-cadastro-chavepix-solicitacao")
-                .partitions(10)
-                .replicas(1)
-                .build();
-    }
-
 }
