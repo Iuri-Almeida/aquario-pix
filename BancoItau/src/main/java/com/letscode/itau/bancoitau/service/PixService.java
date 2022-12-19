@@ -35,8 +35,7 @@ public class PixService {
     }
 
     public Mono<ResponseEntity<Conta>> enviaPix(PixDTORequest pixDTO) {
-        //TODO confirmacao existencia chave
-        //GET /api/bacen/pix/cahves?tipo=CPF&cahve=465468456
+
         String mensagem = criaMensagemKafka(pixDTO);
         return contaRepository.findByNumeroContaAndAgencia(pixDTO.getContaRemetente(), pixDTO.getAgenciaRemetente()).flatMap(
                 conta -> {
@@ -60,8 +59,7 @@ public class PixService {
     }
 
     private BigDecimal calculaNovoSaldo(BigDecimal valorPix, BigDecimal saldoEmConta) {
-        BigDecimal novoSaldo = saldoEmConta.subtract(valorPix);
-        return novoSaldo;
+        return saldoEmConta.subtract(valorPix);
     }
 
     private void salvaTransferencia(PixTransferencia pixTransferencia) {
@@ -69,7 +67,7 @@ public class PixService {
     }
 
     private PixTransferencia criaTransferencia(PixDTORequest pixDTO, BigDecimal valorPix) {
-        PixTransferencia pixTransferencia = PixTransferencia.builder()
+        return PixTransferencia.builder()
                 .reqId(pixDTO.getReqId())
                 .chave(pixDTO.getChave())
                 .valor(valorPix)
@@ -78,7 +76,6 @@ public class PixService {
                 .contaRemetente(pixDTO.getContaRemetente())
                 .agenciaRemetente(pixDTO.getAgenciaRemetente())
                 .build();
-        return pixTransferencia;
     }
 
     private void enviaSolicitacaoKafkaPix(String mensagem) {
@@ -91,7 +88,7 @@ public class PixService {
         if (pixRecusado(pixDTOResponse)) {
             System.out.println("Rollback de pix");
             String reqId = getReqId(pixDTOResponse);
-            transferenciaRepository.findById(reqId).subscribe(transferencia -> {
+            transferenciaRepository.findByReqId(reqId).subscribe(transferencia -> {
                 mudaStatusDaTransferencia(transferencia, Status.Recusado);
                 deletaTransferenciaComStatusPendente(transferencia);
                 salvaTransferenciaComNovoStatus(transferencia);
@@ -157,13 +154,11 @@ public class PixService {
     public void getSolicitacaoPix(String msg) {
         PixSolicitacaoDTORequest pixSolicitacaoDTORequest = new Gson().fromJson(msg, PixSolicitacaoDTORequest.class);
         contaRepository.findByCpf(pixSolicitacaoDTORequest.getChave())
-                // TODO Se a conta não existir?
                 .subscribe(conta -> {
                     conta.setSaldo(conta.getSaldo().add(pixSolicitacaoDTORequest.getValor()));
                     contaRepository.save(conta).subscribe();
 
                     PixTransferencia pixTransferencia = pixSolicitacaoDTORequest.mapperToEntity(Status.Aceito);
-                    //transferenciaRepository.save(pixTransferencia).subscribe();
 
                     kafkaTemplate.send("itau-pix-confirmacao", new Gson().toJson(new PixDTOResponse(pixTransferencia.getStatus(), pixTransferencia.getReqId())));
 
