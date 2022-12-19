@@ -39,30 +39,28 @@ public class CadastroDeChaveService {
     }
 
 
-    public void conferirRequerente(String numeroConta, String agencia) {
-        contaRepository.findByNumeroContaAndAgencia(numeroConta, agencia).subscribe(System.out::println);
-    }
 
 
-    public void solicitarCadastroBacen(Long idRequisicao, String numeroConta, String agencia, String chave) {
+
+    private void solicitarCadastroBacen(Long idRequisicao, String numeroConta, String agencia, String chave) {
         CadastroBacenDTORequest requestBacen = new CadastroBacenDTORequest(idRequisicao, chave, TipoChavePix.CPF, agencia, numeroConta);
         String mensagem = new Gson().toJson(requestBacen);
         enviaMensagemKafka(mensagem);
     }
 
 
-    public Mono<ResponseEntity<ChavePix>> salvarChavePix(ChavePixDTO chavePixDTO) {
+    private Mono<ResponseEntity<ChavePix>> salvarChavePix(ChavePixDTO chavePixDTO) {
         ChavePix chavePix = chavePixDTOparaChavePix(chavePixDTO);
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
         return pixRepository.save(chavePix).map(chave -> ResponseEntity.created(uriComponentsBuilder.path("/api/itau/pix/{chave}").buildAndExpand(chave.getChave()).toUri()).body(chave));
     }
 
-    public Long geraIdRequisicao() {
+    private Long geraIdRequisicao() {
         return (long) new Random().nextInt(Integer.MAX_VALUE);
     }
 
 
-    public Long withIdChavePix(ChavePixDTO chavePixDTO) {
+    private Long withIdChavePix(ChavePixDTO chavePixDTO) {
         Long idRequisicao = geraIdRequisicao();
         chavePixDTO.setReqId(idRequisicao);
         return idRequisicao;
@@ -87,8 +85,6 @@ public class CadastroDeChaveService {
         String conta = chavePixDTO.getRequerente().getConta();
         String agencia = chavePixDTO.getRequerente().getAgencia();
         String cpf = chavePixDTO.getRequerente().getCpf();
-
-        conferirRequerente(conta, agencia);
 
         solicitarCadastroBacen(idRequisicao, conta, agencia, cpf);
 
