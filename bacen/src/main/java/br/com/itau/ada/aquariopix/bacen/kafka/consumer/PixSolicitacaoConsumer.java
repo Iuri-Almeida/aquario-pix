@@ -17,8 +17,8 @@ public class PixSolicitacaoConsumer {
     @KafkaListener(
             id = "${spring.kafka.consumer.pixSolicitacao-itau.group-id}",
             topics = "${topic.consumer.itauPixSolicitacao.name}")
-    public void listenItauEnvioPix(String message, Acknowledgment ack){
-        parseMensagemEnvioPix(message);
+    public void itauEnvioPix(String messagem, Acknowledgment ack){
+        solicitacaoPix(messagem);
 
         ack.acknowledge();
     }
@@ -26,13 +26,13 @@ public class PixSolicitacaoConsumer {
     @KafkaListener(
             id = "${spring.kafka.consumer.pixSolicitacao-ada.group-id}",
             topics = "${topic.consumer.adaPixSolicitacao.name}")
-    public void listenAdaEnvioPix(String message, Acknowledgment ack){
-        parseMensagemEnvioPix(message);
+    public void adaEnvioPix(String messagem, Acknowledgment ack){
+        solicitacaoPix(messagem);
 
         ack.acknowledge();
     }
 
-    private void parseMensagemEnvioPix(String messagem) {
+    private void solicitacaoPix(String messagem) {
         PixSolicitacaoDto pixDto = parseMensagem(messagem);
         pixSolicitacaoService.enviarPix(pixDto);
     }

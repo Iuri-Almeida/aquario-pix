@@ -39,6 +39,7 @@ public class PixService {
         String mensagem = criaMensagemKafka(pixDTO);
         return contaRepository.findByNumeroContaAndAgencia(pixDTO.getContaRemetente(), pixDTO.getAgenciaRemetente()).flatMap(
                 conta -> {
+
                     BigDecimal valorPix = pixDTO.getValor();
                     BigDecimal saldoEmConta = conta.getSaldo();
                     if (hasSaldoSuficiente(valorPix, saldoEmConta)) {
@@ -46,6 +47,7 @@ public class PixService {
                         PixTransferencia pixTransferencia = criaTransferencia(pixDTO, valorPix);
                         salvaTransferencia(pixTransferencia);
                         BigDecimal novoSaldo = calculaNovoSaldo(valorPix, saldoEmConta);
+
                         conta.setSaldo(novoSaldo);
                         return atualizaContaComNovoSaldo(conta);
                     }
@@ -159,6 +161,9 @@ public class PixService {
                     contaRepository.save(conta).subscribe();
 
                     PixTransferencia pixTransferencia = pixSolicitacaoDTORequest.mapperToEntity(Status.Aceito);
+
+                    transferenciaRepository.save(pixTransferencia).subscribe();
+
 
                     kafkaTemplate.send("itau-pix-confirmacao", new Gson().toJson(new PixDTOResponse(pixTransferencia.getStatus(), pixTransferencia.getReqId())));
 

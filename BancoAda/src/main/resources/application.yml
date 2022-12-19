@@ -2,7 +2,7 @@ spring:
   application:
     name: ada-service
   kafka:
-    bootstrap-servers: broker1:29092
+    bootstrap-servers: broker1:29092,broker2:29093,broker3:29094
     consumer:
 #      group-id: "spring-kafka-service-consumer"
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer

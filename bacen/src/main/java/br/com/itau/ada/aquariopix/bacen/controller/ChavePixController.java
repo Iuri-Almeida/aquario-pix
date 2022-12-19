@@ -1,6 +1,6 @@
 package br.com.itau.ada.aquariopix.bacen.controller;
 
-import br.com.itau.ada.aquariopix.bacen.dto.ChavePixDto;
+import br.com.itau.ada.aquariopix.bacen.dto.chavePix.ChavePixDto;
 import br.com.itau.ada.aquariopix.bacen.dto.chavePix.ChavePixConfirmacaoDto;
 import br.com.itau.ada.aquariopix.bacen.dto.chavePix.ChavePixJaExistenteDto;
 import br.com.itau.ada.aquariopix.bacen.dto.chavePix.ChavePixSolicitacaoDto;
@@ -28,7 +28,7 @@ public class ChavePixController {
 
     @PostMapping
     public ResponseEntity<ChavePixConfirmacaoDto> cadastrarChavePix(@RequestBody ChavePixSolicitacaoDto chavePixSolicitacaoDto) {
-        ChavePixConfirmacaoDto chavePixConfirmacaoDto = chavePixService.cadastrarChavePix(chavePixSolicitacaoDto);
+        ChavePixConfirmacaoDto chavePixConfirmacaoDto = chavePixService.salvarChave(chavePixSolicitacaoDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(chavePixConfirmacaoDto);
     }
 
