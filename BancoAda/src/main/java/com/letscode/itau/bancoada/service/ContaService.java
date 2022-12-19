@@ -1,12 +1,12 @@
 package com.letscode.itau.bancoada.service;
 
 import com.google.gson.Gson;
+import com.letscode.itau.bancoada.kafka.producer.AdaKafkaProducer;
 import com.letscode.itau.bancoada.model.Conta;
 import com.letscode.itau.bancoada.model.ContaBacen;
 import com.letscode.itau.bancoada.repository.ContaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
@@ -19,7 +19,7 @@ import java.util.Optional;
 public class ContaService {
 
     private final ContaRepository contaRepository;
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final AdaKafkaProducer adaKafkaProducer;
 
     public Flux<Conta> findAll() {
         return contaRepository.findAll();
@@ -83,8 +83,12 @@ public class ContaService {
     }
 
     private void enviaConta(ContaBacen contaBacen) {
-        String mensagem = new Gson().toJson(contaBacen);
-        kafkaTemplate.send("ada-cadastro-conta", mensagem);
+        String mensagem = this.object2Json(contaBacen);
+        adaKafkaProducer.publicar("ada-cadastro-conta", mensagem);
+    }
+
+    private String object2Json(Object obj) {
+        return new Gson().toJson(obj);
     }
 
 }
