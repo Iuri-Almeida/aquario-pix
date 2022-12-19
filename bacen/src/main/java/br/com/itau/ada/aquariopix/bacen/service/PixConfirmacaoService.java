@@ -19,12 +19,9 @@ public class PixConfirmacaoService {
 
     private final BacenProducer producer;
 
-    private final ChavePixService chavePixService;
-
     public PixConfirmacaoService(PixTransferenciaRepository pixTransferenciaRepository, BacenProducer producer, ChavePixService chavePixService) {
         this.pixTransferenciaRepository = pixTransferenciaRepository;
         this.producer = producer;
-        this.chavePixService = chavePixService;
     }
 
     public MensagemKafkaDto confirmarPixParaRemetente(PixConfirmacaoDto pixConfirmacaoDto) {
