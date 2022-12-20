@@ -22,7 +22,7 @@ Microservices-based backend application to manage a pix transaction. Please see 
 
 ## Documentation
 
-Please see the [diagram][diagram] file for a complete documentation and visual representation of the application. You can access our [Postman][postman] collection [here][collection]
+Please see our [Postman][postman] collection [here][collection]. Feel free to download and test the endpoints.
 
 ## Authors
 
