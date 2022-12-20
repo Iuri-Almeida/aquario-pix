@@ -1,0 +1,732 @@
+{
+	"info": {
+		"_postman_id": "5b9b0b00-6776-4cc9-8e92-95924ecff170",
+		"name": "API PIX",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23149137"
+	},
+	"item": [
+		{
+			"name": "Itau",
+			"item": [
+				{
+					"name": "Chave",
+					"item": [
+						{
+							"name": "GET /api/itau/pix",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:5000/api/itau/pix",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"itau",
+										"pix"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET /api/itau/pix/{chave}",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:5000/api/itau/pix/4568891134",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"itau",
+										"pix",
+										"4568891134"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST /api/itau/pix/chaves",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"tipoDeChave\":\"CPF\",\n    \"requerente\": {\n        \"conta\": \"2654\",\n        \"agencia\": \"021\",\n        \"cpf\": \"12345678910\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5000/api/itau/pix/chaves",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"itau",
+										"pix",
+										"chaves"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Conta",
+					"item": [
+						{
+							"name": "GET /api/itau/conta",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:5000/api/itau/conta",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"itau",
+										"conta"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET /api/itau/conta/{id}",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:5000/api/itau/conta/1",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"itau",
+										"conta",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST /api/itau/conta",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \n    \"nome\":\"Iuri\",\n    \"cpf\":\"12345678910\",\n    \"email\":\"iuri@itau.com.br\",\n    \"agencia\":\"021\",\n    \"numeroConta\":\"2654\",\n    \"saldo\": 1000\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5000/api/itau/conta",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"itau",
+										"conta"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PATCH /api/itau/conta/{id}",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"aksjdhjkasdhad@gmail.com\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5000/api/itau/conta/1",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"itau",
+										"conta",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE /api/itau/conta",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:5000/api/itau/conta/1",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"itau",
+										"conta",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Pix",
+					"item": [
+						{
+							"name": "POST /api/itau/pix",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"chave\": \"12345678911\",\n    \"valor\": 100.00,\n    \"contaRemetente\": \"2654\",\n    \"agenciaRemetente\": \"021\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5000/api/itau/pix",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"itau",
+										"pix"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Transferencias",
+					"item": [
+						{
+							"name": "GET /api/itau/pix/transferencias",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:5000/api/itau/pix/transferencias",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"itau",
+										"pix",
+										"transferencias"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Bacen",
+			"item": [
+				{
+					"name": "Chave",
+					"item": [
+						{
+							"name": "GET /api/bacen/pix/chaves",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:5000/api/bacen/pix/chaves/12345678910",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"bacen",
+										"pix",
+										"chaves",
+										"12345678910"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST /api/bacen/pix/chaves",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5000/api/bacen/pix/chaves",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"bacen",
+										"pix",
+										"chaves"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Conta",
+					"item": [
+						{
+							"name": "GET /api/bacen/contas",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:5000/api/bacen/contas",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"bacen",
+										"contas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET /api/bacen/contas/{id}",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:5000/api/bacen/contas/1",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"bacen",
+										"contas",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST /api/bacen/contas",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \n    \"nome\":\"Iuri\",\n    \"cpf\":\"12345678911\",\n    \"email\":\"iuri@ada.com.br\",\n    \"agencia\":\"022\",\n    \"numeroConta\":\"2655\",\n    \"banco\": \"Ada\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5000/api/bacen/contas",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"bacen",
+										"contas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PATCH /api/bacen/contas/{id}",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"aksjdhjkasdhad@gmail.com\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5000/api/bacen/contas/1",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"bacen",
+										"contas",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE /api/bacen/contas",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:5000/api/bacen/contas/1",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"bacen",
+										"contas",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Ada",
+			"item": [
+				{
+					"name": "Chave",
+					"item": [
+						{
+							"name": "GET /api/ada/pix",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:5000/api/ada/pix",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"ada",
+										"pix"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET /api/ada/pix/{chave}",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:5000/api/ada/pix/4568891134",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"ada",
+										"pix",
+										"4568891134"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST /api/ada/pix/chaves",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"tipoDeChave\":\"CPF\",\n    \"requerente\": {\n        \"conta\": \"2655\",\n        \"agencia\": \"022\",\n        \"cpf\": \"12345678911\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5000/api/ada/pix/chaves",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"ada",
+										"pix",
+										"chaves"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Conta",
+					"item": [
+						{
+							"name": "GET /api/ada/conta",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:5000/api/ada/conta",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"ada",
+										"conta"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET /api/ada/conta/{id}",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:5000/api/ada/conta/1",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"ada",
+										"conta",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST /api/ada/conta",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \n    \"nome\":\"Iuri\",\n    \"cpf\":\"12345678911\",\n    \"email\":\"iuri@ada.com.br\",\n    \"agencia\":\"022\",\n    \"numeroConta\":\"2655\",\n    \"saldo\": 1000\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5000/api/ada/conta",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"ada",
+										"conta"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PATCH /api/ada/conta/{id}",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"ialmeida@ada.com.br\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5000/api/ada/conta/1",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"ada",
+										"conta",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE /api/ada/conta",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:5000/api/ada/conta/1",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"ada",
+										"conta",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Pix",
+					"item": [
+						{
+							"name": "POST /api/ada/pix",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"chave\": \"12345678910\",\n    \"valor\": 100.00,\n    \"contaRemetente\": \"2655\",\n    \"agenciaRemetente\": \"022\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5000/api/ada/pix",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"ada",
+										"pix"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Transferencias",
+					"item": [
+						{
+							"name": "GET /api/ada/pix/transferencias",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:5000/api/ada/pix/transferencias",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"ada",
+										"pix",
+										"transferencias"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
