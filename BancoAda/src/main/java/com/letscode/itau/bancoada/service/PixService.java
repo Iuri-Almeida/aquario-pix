@@ -50,7 +50,7 @@ public class PixService {
         if (this.isStatusRecusado(pixDTOResponse.getStatus())) {
             System.out.println("Rollback de pix");
 
-            transferenciaRepository.findById(pixDTOResponse.getReqId()).subscribe(transferencia -> {
+            transferenciaRepository.findByReqId(pixDTOResponse.getReqId()).subscribe(transferencia -> {
 
                 transferencia.setStatus(Status.Recusado);
                 transferenciaRepository.save(transferencia).subscribe();
