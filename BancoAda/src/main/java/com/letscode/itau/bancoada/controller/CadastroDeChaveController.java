@@ -21,19 +21,8 @@ public class CadastroDeChaveController {
 
     @PostMapping("chaves")
     public Mono<ResponseEntity<ChavePix>> cadastrarChavePix(@RequestBody ChavePixDTO chavePixDTO) {
-
-        Long idRequisicao = service.withIdChavePix(chavePixDTO);
-
-        String conta = chavePixDTO.getRequerente().getConta();
-        String agencia = chavePixDTO.getRequerente().getAgencia();
-        String cpf = chavePixDTO.getRequerente().getCpf();
-
-        service.conferirRequerente(conta, agencia);
-
-        service.solicitarCadastroBacen(idRequisicao, conta, agencia, cpf);
-
-        return service.salvarChavePix(chavePixDTO);
-
+        //TODO tratamento de erro chave repetida
+        return service.cadastrarChavePix(chavePixDTO);
     }
 
     @GetMapping("/{chave}")

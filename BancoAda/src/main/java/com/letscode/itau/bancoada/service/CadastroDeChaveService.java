@@ -26,34 +26,6 @@ public class CadastroDeChaveService {
     private final ChavePixRepository pixRepository;
     private final ContaRepository contaRepository;
 
-    public void conferirRequerente(String numeroConta, String agencia) {
-        contaRepository.findByNumeroContaAndAgencia(numeroConta, agencia).subscribe();
-    }
-
-    public void solicitarCadastroBacen(Long idRequisicao, String numeroConta, String agencia, String chave) {
-        CadastroBacenDTORequest requestBacen = new CadastroBacenDTORequest(idRequisicao, chave, TipoChavePix.CPF, agencia, numeroConta);
-
-        String mensagem = this.object2Json(requestBacen);
-
-        this.enviaMensagemKafka(mensagem);
-    }
-
-    public Mono<ResponseEntity<ChavePix>> salvarChavePix(ChavePixDTO chavePixDTO) {
-        ChavePix chavePix = this.chavePixDTOparaChavePix(chavePixDTO);
-
-        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-
-        return pixRepository.save(chavePix).map(chave -> ResponseEntity.created(uriComponentsBuilder.path("/api/ada/pix/{chave}").buildAndExpand(chave.getChave()).toUri()).body(chave));
-    }
-
-    public Long withIdChavePix(ChavePixDTO chavePixDTO) {
-        Long idRequisicao = this.geraIdRequisicao();
-
-        chavePixDTO.setReqId(idRequisicao);
-
-        return idRequisicao;
-    }
-
     public Flux<ChavePix> findAll() {
         return pixRepository.findAll();
     }
@@ -64,6 +36,48 @@ public class CadastroDeChaveService {
 
     public void getStatusBacen(CadastroBacenDTOResponse cadastroBacenDTOResponse) {
         this.atualizaStatus(cadastroBacenDTOResponse);
+    }
+
+    public Mono<ResponseEntity<ChavePix>> cadastrarChavePix(ChavePixDTO chavePixDTO) {
+        Long idRequisicao = this.withIdChavePix(chavePixDTO);
+
+        String conta = chavePixDTO.getRequerente().getConta();
+        String agencia = chavePixDTO.getRequerente().getAgencia();
+        String cpf = chavePixDTO.getRequerente().getCpf();
+
+        this.conferirRequerente(conta, agencia);
+
+        this.solicitarCadastroBacen(idRequisicao, conta, agencia, cpf);
+
+        return this.salvarChavePix(chavePixDTO);
+    }
+
+    private Long withIdChavePix(ChavePixDTO chavePixDTO) {
+        Long idRequisicao = this.geraIdRequisicao();
+
+        chavePixDTO.setReqId(idRequisicao);
+
+        return idRequisicao;
+    }
+
+    private void conferirRequerente(String numeroConta, String agencia) {
+        contaRepository.findByNumeroContaAndAgencia(numeroConta, agencia).subscribe();
+    }
+
+    private void solicitarCadastroBacen(Long idRequisicao, String numeroConta, String agencia, String chave) {
+        CadastroBacenDTORequest requestBacen = new CadastroBacenDTORequest(idRequisicao, chave, TipoChavePix.CPF, agencia, numeroConta);
+
+        String mensagem = this.object2Json(requestBacen);
+
+        this.enviaMensagemKafka(mensagem);
+    }
+
+    private Mono<ResponseEntity<ChavePix>> salvarChavePix(ChavePixDTO chavePixDTO) {
+        ChavePix chavePix = this.chavePixDTOparaChavePix(chavePixDTO);
+
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+
+        return pixRepository.save(chavePix).map(chave -> ResponseEntity.created(uriComponentsBuilder.path("/api/ada/pix/{chave}").buildAndExpand(chave.getChave()).toUri()).body(chave));
     }
 
     private void atualizaStatus(CadastroBacenDTOResponse cadastroBacenDTOResponse) {
