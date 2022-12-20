@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import reactor.core.publisher.Mono;
 
@@ -22,6 +23,8 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -47,6 +50,23 @@ public class CadastroDeChaveServiceTest {
     private CadastroBacenDTOResponse getCadastroBacenDTOResponse(Status status) {
         return new CadastroBacenDTOResponse(1L, "12345678910", TipoChavePix.CPF, "Itau", "001", "001", status);
     }
+
+    @Test
+    @DisplayName("Find all test.")
+    public void findAllTest() {
+        cadastroDeChaveService.findAll();
+
+        Mockito.verify(chavePixRepository, times(1)).findAll();
+    }
+
+    @Test
+    @DisplayName("Find by chave test.")
+    public void findByChaveTest() {
+        when(chavePixRepository.findByChave(anyString())).thenReturn(Mono.just(new ChavePix()));
+
+        cadastroDeChaveService.findByChave("1234").subscribe(conta -> Mockito.verify(chavePixRepository, times(1)).findByChave(anyString()));
+    }
+
 
     @Test
     @DisplayName("Deve cadastrar uma chave pix.")
